@@ -1,0 +1,36 @@
+{
+  "name": "2024-CircuitBreaker",
+  "version": "1.0.0",
+  "author": "Knocks",
+  "license": "MIT",
+  "scripts": {
+    "install": "cd packages/frontend && npm install && cd ../backend && npm install",
+    "dev": "cd packages/frontend && npm run dev",
+    "build": "cd packages/frontend && npm run build && cd ../backend && npm run build",
+    "clean": "npx rimraf node_modules out && cd packages/frontend && npx rimraf node_modules out  dist coverage && cd ../backend && npx rimraf node_modules out dist coverage",
+    "test": "cd packages/frontend && npm run test && cd ../backend && npm run test",
+    "test:coverage": "cd packages/frontend && npm run test:coverage && cd ../backend && npm run test:coverage",
+    "test:watch": "cd packages/frontend && npm run test:watch && cd ../backend && npm run test:watch",
+    "lint": "cd packages/frontend && npm run lint && cd ../backend && npm run lint",
+    "lint:fix": "cd packages/frontend && npm run lint:fix && cd ../backend && npm run lint:fix",
+    "lint:text": "npx textlint ./README.md",
+    "lint-staged": "lint-staged",
+    "format": "cd packages/frontend && npm run format && cd ../backend && npm run format",
+    "format:check": "cd packages/frontend && npm run format:check && cd ../backend && npm run format:check",
+    "prepare": "husky",
+    "start:frontend": "cd packages/frontend && npm start",
+    "start:backend": "cd packages/backend && npm start"
+  },
+  "devDependencies": {
+    "husky": "^8.0.3",
+    "lint-staged": "^12.0.0",
+    "prettier": "^3.2.4",
+    "rimraf": "^5.0.5",
+    "textlint": "^13.4.1",
+    "textlint-rule-no-mixed-zenkaku-and-hankaku-alphabet": "^1.0.1",
+    "textlint-rule-no-mixed-zenkaku-and-hankaku-number": "^1.0.0",
+    "textlint-rule-preset-ja-spacing": "^2.2.0",
+    "textlint-rule-preset-ja-technical-writing": "^10.0.1",
+    "textlint-rule-spellcheck-tech-word": "^5.0.0"
+  }
+}

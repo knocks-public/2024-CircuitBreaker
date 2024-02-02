@@ -1,0 +1,7 @@
+{
+  "filters": {},
+  "rules": {
+    "no-mixed-zenkaku-and-hankaku-alphabet": true,
+    "no-mixed-zenkaku-and-hankaku-number": true
+  }
+}
