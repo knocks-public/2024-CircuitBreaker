@@ -1,0 +1,16 @@
+version: '3'
+services:
+  inro-mobile:
+    build: .
+    volumes:
+      - .:/app
+      - /app/node_modules
+    ports:
+      - "8081:8081"
+    environment:
+      - TZ=Asia/Tokyo
+      - SINDRI_API_KEY=${SINDRI_API_KEY}
+      - SINDRI_API_URL=${SINDRI_API_URL}
+      - CIRCUIT_ID=${CIRCUIT_ID}
+      - REACT_NATIVE_PACKAGER_HOSTNAME=${LOCAL_IP_ADDR}
+    tty: true

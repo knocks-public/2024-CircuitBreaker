@@ -6,7 +6,7 @@
   "scripts": {
     "install": "cd packages/frontend && npm install && cd ../backend && npm install",
     "dev": "cd packages/frontend && npm run dev",
-    "build": "cd packages/frontend && npm run build && cd ../backend && npm run build",
+    "build": "cd packages/backend && npm run build",
     "clean": "npx rimraf node_modules out && cd packages/frontend && npx rimraf node_modules out  dist coverage && cd ../backend && npx rimraf node_modules out dist coverage",
     "test": "cd packages/frontend && npm run test && cd ../backend && npm run test",
     "test:coverage": "cd packages/frontend && npm run test:coverage && cd ../backend && npm run test:coverage",
@@ -22,6 +22,10 @@
     "start:backend": "cd packages/backend && npm start"
   },
   "devDependencies": {
+    "@tsconfig/react-native": "^3.0.3",
+    "@types/jest": "^29.5.12",
+    "@types/react": "^18.2.52",
+    "@types/react-test-renderer": "^18.0.7",
     "husky": "^8.0.3",
     "lint-staged": "^15.2.1",
     "prettier": "^3.2.4",
@@ -31,6 +35,7 @@
     "textlint-rule-no-mixed-zenkaku-and-hankaku-number": "^1.0.0",
     "textlint-rule-preset-ja-spacing": "^2.2.0",
     "textlint-rule-preset-ja-technical-writing": "^10.0.1",
-    "textlint-rule-spellcheck-tech-word": "^5.0.0"
+    "textlint-rule-spellcheck-tech-word": "^5.0.0",
+    "typescript": "^5.3.3"
   }
 }
