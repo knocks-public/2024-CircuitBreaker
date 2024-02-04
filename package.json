@@ -8,6 +8,7 @@
     "dev": "cd packages/frontend && npm run dev",
     "build": "cd packages/backend && npm run build",
     "clean": "npx rimraf node_modules out && cd packages/frontend && npx rimraf node_modules out  dist coverage && cd ../backend && npx rimraf node_modules out dist coverage",
+    "deploy:circuit": "cd packages/circuit && make deploy",
     "test": "cd packages/frontend && npm run test && cd ../backend && npm run test",
     "test:coverage": "cd packages/frontend && npm run test:coverage && cd ../backend && npm run test:coverage",
     "test:watch": "cd packages/frontend && npm run test:watch && cd ../backend && npm run test:watch",
