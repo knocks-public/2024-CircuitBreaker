@@ -1,10 +1,10 @@
 import SindriRepository from '../repository/sindriRepository';
-import Config from 'react-native-config';
 
 class SindriService {
   private repository: SindriRepository;
   private circuitId: string =
-    Config.CIRCUIT_ID || 'e98c114f-6b0d-4fe0-9379-4ee91a1c6963';
+    process.env.EXPO_PUBLIC_CIRCUIT_ID ||
+    'e98c114f-6b0d-4fe0-9379-4ee91a1c6963';
 
   constructor() {
     this.repository = new SindriRepository();
