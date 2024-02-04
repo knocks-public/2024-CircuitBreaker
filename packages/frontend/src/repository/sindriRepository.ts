@@ -10,11 +10,15 @@ class SindriRepository {
   };
 
   async getRequest(endpoint: string) {
-    return axios.get(`${this.API_URL}${endpoint}`, { headers: this.headersJson });
+    return axios.get(`${this.API_URL}${endpoint}`, {
+      headers: this.headersJson,
+    });
   }
 
   async postRequest(endpoint: string, data: any) {
-    return axios.post(`${this.API_URL}${endpoint}`, data, { headers: this.headersJson });
+    return axios.post(`${this.API_URL}${endpoint}`, data, {
+      headers: this.headersJson,
+    });
   }
 }
 
