@@ -24,24 +24,28 @@ Follow these steps to run the project locally:
 1. **Clone the Repository**
 
    ```bash
-   git clone https://github.com/knocks-public/Inro.git
+   git clone https://github.com/knocks-public/2024-CircuitBreaker.git
    ```
 
 2. **Install Dependencies**
 
    ```bash
-   npm install
+   make install
    ```
 
 3. **Start the Application**
 
    ```bash
-   npm start
+   make run_frontend
    ```
 
 ## Environment Configuration
 
 Ensure the following environment variables are set up for the project to function correctly:
+
+### packages/frontend
+
+copy .env_sample to .env and modify it.
 
 - `EXPO_PUBLIC_SINDRI_API_KEY`: Your Sindri API key.
 - `EXPO_PUBLIC_SINDRI_API_URL`: The URL for the Sindri API.
