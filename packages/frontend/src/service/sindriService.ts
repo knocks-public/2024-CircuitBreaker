@@ -52,4 +52,4 @@ class SindriService {
   }
 }
 
-export default new SindriService();
+export default SindriService;
