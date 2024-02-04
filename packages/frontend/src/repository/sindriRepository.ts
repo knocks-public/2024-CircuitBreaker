@@ -1,9 +1,8 @@
 import axios from 'axios';
-import Config from 'react-native-config';
 
 class SindriRepository {
-  private API_KEY: string = Config.SINDRI_API_KEY || '';
-  private API_URL: string = `${Config.SINDRI_API_URL || 'https://sindri.app/api/'}v1`;
+  private API_KEY: string = process.env.EXPO_PUBLIC_SINDRI_API_KEY || '';
+  private API_URL: string = `${process.env.EXPO_PUBLIC_SINDRI_API_URL || 'https://sindri.app/api/'}v1`;
   private headersJson = {
     Accept: 'application/json',
     Authorization: `Bearer ${this.API_KEY}`,
