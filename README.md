@@ -1,3 +1,5 @@
+[![CI](https://github.com/knocks-public/2024-CircuitBreaker/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/knocks-public/2024-CircuitBreaker/actions/workflows/ci.yml)
+
 # 2024-CircuitBreaker
 
 The `2024-CircuitBreaker` is an application focused on [insert a brief description of the project here], particularly addressing [specific problems or needs]. This project was developed to achieve [purpose or goal of the project].
