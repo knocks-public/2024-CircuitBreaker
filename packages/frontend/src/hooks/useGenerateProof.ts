@@ -6,13 +6,15 @@ const messages = {
   failure: 'Failed to verify your age.',
 };
 
+const service = new SindriService();
+
 export const useGenerateProof = () => {
   const [age, setAge] = useState<string>('');
   const [proofResult, setProofResult] = useState<string>('');
 
   const handleGenerateProof = async () => {
     try {
-      await SindriService.generateProof(parseInt(age, 10));
+      await service.generateProof(parseInt(age, 10));
       setProofResult(messages.success);
     } catch (error) {
       setProofResult(messages.failure);
