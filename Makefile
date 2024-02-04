@@ -10,6 +10,10 @@ build:
 clean:
 	npm run clean
 
+.PHONY: deploy_circuit
+deploy_circuit:
+	npm run deploy:circuit
+
 .PHONY: test
 test:
 	npm run test

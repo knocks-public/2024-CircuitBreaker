@@ -15,6 +15,7 @@
 - React Native
 - TypeScript
 - Expo
+- Noir
 - Sindri API for Zero-Knowledge Proof generation
 
 ## Getting Started
@@ -33,7 +34,13 @@ Follow these steps to run the project locally:
    make install
    ```
 
-3. **Start the Application**
+3. **Deploy Circuit**
+
+   ```bash
+   make deploy_circuit
+   ```
+
+4. **Start the Application**
 
    ```bash
    make run_frontend
