@@ -31,7 +31,7 @@
     "lint-staged": "^15.2.1",
     "prettier": "^3.2.4",
     "rimraf": "^5.0.5",
-    "textlint": "^13.4.1",
+    "textlint": "^14.0.1",
     "textlint-rule-no-mixed-zenkaku-and-hankaku-alphabet": "^1.0.1",
     "textlint-rule-no-mixed-zenkaku-and-hankaku-number": "^1.0.0",
     "textlint-rule-preset-ja-spacing": "^2.2.0",
