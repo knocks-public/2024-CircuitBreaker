@@ -50,6 +50,14 @@ class SindriService {
     }
   }
 
+  async verifyProof(proofId: string): Promise<boolean> {
+    console.log(`Verifying proof with ID: ${proofId}`);
+    // モックの検証結果を返す
+    // 実際のAPI統合前には、ここで検証ロジックを実装します
+    // 以下は検証が成功したと仮定したモックの結果です
+    return true; // または false を返して、検証が失敗したことを示すこともできます
+  }
+
   // async verifyProof(proofId: string) {
   //   const endpoint = `/proof/${proofId}/detail`;
   //   const proofDetail = await this.repository.postRequest(endpoint, {});

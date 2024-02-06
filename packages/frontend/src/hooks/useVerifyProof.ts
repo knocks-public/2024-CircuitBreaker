@@ -1,30 +1,26 @@
 import { useState } from 'react';
+import { Alert } from 'react-native';
 import SindriService from '../service/sindriService';
 
-const messages = {
-  success: 'succeeded',
-  failure: 'failed',
-};
+export const useVerifyAge = () => {
+  const [isVerifier, setIsVerifier] = useState(false);
+  const [verificationResult, setVerificationResult] = useState<string | null>(
+    null
+  );
 
-const service = new SindriService();
-
-export const useVerifyProof = () => {
-  const [proofId, setProofId] = useState<string>('');
-  const [verifyResult, setVerifyResult] = useState<string>('');
-
-  const handleVerifyProof = async () => {
+  const verifyProof = async (proofId: string) => {
+    const service = new SindriService();
     try {
-      await service.verifyProof(proofId);
-      setVerifyResult(messages.success);
+      const result = await service.verifyProof(proofId);
+      if (result) {
+        setVerificationResult('成人確認ができました。');
+      } else {
+        setVerificationResult('検証に失敗しました。');
+      }
     } catch (error) {
-      setVerifyResult(messages.failure);
+      Alert.alert('エラー', '検証中にエラーが発生しました。');
     }
   };
 
-  return {
-    proofId,
-    setProofId,
-    verifyResult,
-    handleVerifyProof,
-  };
+  return { isVerifier, setIsVerifier, verifyProof, verificationResult };
 };
