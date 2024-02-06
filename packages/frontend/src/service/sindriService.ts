@@ -33,21 +33,14 @@ class SindriService {
         endpoint,
         proofInput
       );
-      const proofId: string = proveResponse.data.proof_id;
+      const proofId = proveResponse.data.proof_id;
       console.log(`Proof ID: ${proofId}`);
-
-      const proofDetailResponse = await this.pollForStatus(
-        `/proof/${proofId}/detail`
-      );
-      if (proofDetailResponse.data.status === 'Failed') {
-        throw new Error('Proving failed');
-      }
-
-      console.log(proofDetailResponse.data);
+      return proofId;
     } catch (error) {
       console.error(
         error instanceof Error ? error.message : 'An unknown error occurred.'
       );
+      throw new Error('Failed to generate proof');
     }
   }
 }
