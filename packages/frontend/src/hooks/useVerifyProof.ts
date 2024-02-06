@@ -13,12 +13,12 @@ export const useVerifyAge = () => {
     try {
       const result = await service.verifyProof(proofId);
       if (result) {
-        setVerificationResult('成人確認ができました。');
+        setVerificationResult('Adult verification was successful.');
       } else {
-        setVerificationResult('検証に失敗しました。');
+        setVerificationResult('Verification failed.');
       }
     } catch (error) {
-      Alert.alert('エラー', '検証中にエラーが発生しました。');
+      Alert.alert('Error', 'An error occurred during verification.');
     }
   };
 
