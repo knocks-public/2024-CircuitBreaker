@@ -25,7 +25,7 @@
   "devDependencies": {
     "@tsconfig/react-native": "^3.0.3",
     "@types/jest": "^29.5.12",
-    "@types/react": "^18.2.53",
+    "@types/react": "^18.2.54",
     "@types/react-test-renderer": "^18.0.7",
     "husky": "^8.0.3",
     "lint-staged": "^15.2.1",
