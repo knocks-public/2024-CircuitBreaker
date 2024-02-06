@@ -1,4 +1,10 @@
+// import { BarretenbergBackend } from '@noir-lang/backend_barretenberg';
+// import { Noir, ProofData } from '@noir-lang/noir_js';
+// import { CompiledCircuit } from '@noir-lang/types/lib/esm/types';
 import SindriRepository from '../repository/sindriRepository';
+// import { hexStringToUint8Array } from '../utils/bytesStringParser';
+
+// const circuit: CompiledCircuit = require('../../../circuit/target/inro.json');
 
 class SindriService {
   private repository: SindriRepository;
@@ -43,6 +49,34 @@ class SindriService {
       throw new Error('Failed to generate proof');
     }
   }
+
+  // async verifyProof(proofId: string) {
+  //   const endpoint = `/proof/${proofId}/detail`;
+  //   const proofDetail = await this.repository.postRequest(endpoint, {});
+
+  //   const proofBytes = hexStringToUint8Array(proofDetail.data.proof);
+
+  //   const backend = new BarretenbergBackend(circuit as CompiledCircuit);
+  //   const noir = new Noir(circuit as CompiledCircuit, backend);
+
+  //   const proof: ProofData = {
+  //     proof: proofBytes,
+  //     publicInputs: new Map<number, string>([
+  //       [
+  //         2,
+  //         '0x0000000000000000000000000000000000000000000000000000000000000000',
+  //       ],
+  //     ]),
+  //   };
+
+  //   const verification = await noir.verifyFinalProof(proof);
+
+  //   if (verification) {
+  //     console.log('Proof verified successfully');
+  //   } else {
+  //     console.error('Proof verification failed');
+  //   }
+  // }
 }
 
 export default SindriService;
