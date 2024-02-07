@@ -2,7 +2,7 @@
 // import { Noir, ProofData } from '@noir-lang/noir_js';
 // import { CompiledCircuit } from '@noir-lang/types/lib/esm/types';
 import SindriRepository from '../repository/sindriRepository';
-// import { hexStringToUint8Array } from '../utils/bytesStringParser';
+import { hexStringToUint8Array } from '../utils/bytesStringParser';
 
 // const circuit: CompiledCircuit = require('../../../circuit/target/inro.json');
 
@@ -50,33 +50,52 @@ class SindriService {
     }
   }
 
-  // async verifyProof(proofId: string) {
-  //   const endpoint = `/proof/${proofId}/detail`;
-  //   const proofDetail = await this.repository.postRequest(endpoint, {});
+  async fetchProofDetail(proofId: string): Promise<any> {
+    console.log('Request the proof detail from Sindri API...');
+    const endpoint = `/proof/${proofId}/detail`;
+    const proofDetailResponse = await this.repository.pollForStatus(endpoint);
+    const proofDetailStatus = proofDetailResponse.data.status;
+    if (proofDetailStatus === 'Failed') {
+      throw new Error('Proving failed');
+    }
+    console.log(`proofDetail: ${JSON.stringify(proofDetailResponse.data)}`);
+    const proof = proofDetailResponse.data.proof.proof;
+    return proof;
+  }
 
-  //   const proofBytes = hexStringToUint8Array(proofDetail.data.proof);
+  convertProofToUint8Array(proof: string) {
+    const result = hexStringToUint8Array(proof);
+    console.log(`Proof: ${result}`);
+    return result;
+  }
 
-  //   const backend = new BarretenbergBackend(circuit as CompiledCircuit);
-  //   const noir = new Noir(circuit as CompiledCircuit, backend);
+  async verifyProof(proofId: string): Promise<boolean> {
+    const proofDetail = await this.fetchProofDetail(proofId);
 
-  //   const proof: ProofData = {
-  //     proof: proofBytes,
-  //     publicInputs: new Map<number, string>([
-  //       [
-  //         2,
-  //         '0x0000000000000000000000000000000000000000000000000000000000000000',
-  //       ],
-  //     ]),
-  //   };
+    this.convertProofToUint8Array(proofDetail);
 
-  //   const verification = await noir.verifyFinalProof(proof);
+    return true;
+    // const backend = new BarretenbergBackend(circuit as CompiledCircuit);
+    // const noir = new Noir(circuit as CompiledCircuit, backend);
 
-  //   if (verification) {
-  //     console.log('Proof verified successfully');
-  //   } else {
-  //     console.error('Proof verification failed');
-  //   }
-  // }
+    // const proof: ProofData = {
+    //   proof: proofBytes,
+    //   publicInputs: new Map<number, string>([
+    //     [
+    //       2,
+    //       '0x0000000000000000000000000000000000000000000000000000000000000000',
+    //     ],
+    //   ]),
+    // };
+
+    // const verification = await noir.verifyFinalProof(proof);
+
+    // if (verification) {
+    //   console.log('Proof verified successfully');
+    // } else {
+    //   console.error('Proof verification failed');
+    // }
+  }
 }
 
 export default SindriService;

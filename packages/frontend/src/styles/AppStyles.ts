@@ -19,4 +19,8 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 20,
   },
+  camera: {
+    flex: 1,
+    width: '100%',
+  },
 });
