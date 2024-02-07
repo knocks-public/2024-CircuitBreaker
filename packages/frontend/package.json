@@ -26,7 +26,8 @@
     "react": "18.2.0",
     "react-native": "0.73.4",
     "react-native-config": "^1.5.1",
-    "react-native-qrcode-svg": "^6.3.0"
+    "react-native-qrcode-svg": "^6.3.0",
+    "react-native-util": "^1.0.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
