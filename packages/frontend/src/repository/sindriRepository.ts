@@ -19,6 +19,25 @@ class SindriRepository {
       headers: this.headersJson,
     });
   }
+
+  async pollForStatus(endpoint, timeout = 20 * 60) {
+    for (let i = 0; i < timeout; i++) {
+      const response = await axios.get(`${this.API_URL}${endpoint}`, {
+        headers: this.headersJson,
+        validateStatus: (status) => status === 200,
+      });
+
+      const status = response.data.status;
+      if (['Ready', 'Failed'].includes(status)) {
+        console.log(`Poll exited after ${i} seconds with status: ${status}`);
+        return response;
+      }
+
+      await new Promise((r) => setTimeout(r, 1000));
+    }
+
+    throw new Error(`Polling timed out after ${timeout} seconds.`);
+  }
 }
 
 export default SindriRepository;

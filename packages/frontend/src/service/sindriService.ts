@@ -2,7 +2,7 @@
 // import { Noir, ProofData } from '@noir-lang/noir_js';
 // import { CompiledCircuit } from '@noir-lang/types/lib/esm/types';
 import SindriRepository from '../repository/sindriRepository';
-// import { hexStringToUint8Array } from '../utils/bytesStringParser';
+import { hexStringToUint8Array } from '../utils/bytesStringParser';
 
 // const circuit: CompiledCircuit = require('../../../circuit/target/inro.json');
 
@@ -50,41 +50,52 @@ class SindriService {
     }
   }
 
-  async verifyProof(proofId: string): Promise<boolean> {
-    console.log(`Verifying proof with ID: ${proofId}`);
-    // モックの検証結果を返す
-    // 実際のAPI統合前には、ここで検証ロジックを実装します
-    // 以下は検証が成功したと仮定したモックの結果です
-    return true; // または false を返して、検証が失敗したことを示すこともできます
+  async fetchProofDetail(proofId: string): Promise<any> {
+    console.log('Request the proof detail from Sindri API...');
+    const endpoint = `/proof/${proofId}/detail`;
+    const proofDetailResponse = await this.repository.pollForStatus(endpoint);
+    const proofDetailStatus = proofDetailResponse.data.status;
+    if (proofDetailStatus === 'Failed') {
+      throw new Error('Proving failed');
+    }
+    console.log(`proofDetail: ${JSON.stringify(proofDetailResponse.data)}`);
+    const proof = proofDetailResponse.data.proof.proof;
+    return proof;
   }
 
-  // async verifyProof(proofId: string) {
-  //   const endpoint = `/proof/${proofId}/detail`;
-  //   const proofDetail = await this.repository.postRequest(endpoint, {});
+  convertProofToUint8Array(proof: string) {
+    const result = hexStringToUint8Array(proof);
+    console.log(`Proof: ${result}`);
+    return result;
+  }
 
-  //   const proofBytes = hexStringToUint8Array(proofDetail.data.proof);
+  async verifyProof(proofId: string): Promise<boolean> {
+    const proofDetail = await this.fetchProofDetail(proofId);
 
-  //   const backend = new BarretenbergBackend(circuit as CompiledCircuit);
-  //   const noir = new Noir(circuit as CompiledCircuit, backend);
+    this.convertProofToUint8Array(proofDetail);
 
-  //   const proof: ProofData = {
-  //     proof: proofBytes,
-  //     publicInputs: new Map<number, string>([
-  //       [
-  //         2,
-  //         '0x0000000000000000000000000000000000000000000000000000000000000000',
-  //       ],
-  //     ]),
-  //   };
+    return true;
+    // const backend = new BarretenbergBackend(circuit as CompiledCircuit);
+    // const noir = new Noir(circuit as CompiledCircuit, backend);
 
-  //   const verification = await noir.verifyFinalProof(proof);
+    // const proof: ProofData = {
+    //   proof: proofBytes,
+    //   publicInputs: new Map<number, string>([
+    //     [
+    //       2,
+    //       '0x0000000000000000000000000000000000000000000000000000000000000000',
+    //     ],
+    //   ]),
+    // };
 
-  //   if (verification) {
-  //     console.log('Proof verified successfully');
-  //   } else {
-  //     console.error('Proof verification failed');
-  //   }
-  // }
+    // const verification = await noir.verifyFinalProof(proof);
+
+    // if (verification) {
+    //   console.log('Proof verified successfully');
+    // } else {
+    //   console.error('Proof verification failed');
+    // }
+  }
 }
 
 export default SindriService;
