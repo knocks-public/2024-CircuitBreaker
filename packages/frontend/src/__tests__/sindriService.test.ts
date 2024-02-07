@@ -1,12 +1,17 @@
 import SindriRepository from '../repository/sindriRepository';
+import NoirService from '../service/noirService';
 import SindriService from '../service/sindriService';
+
+jest.mock('../service/noirService');
 
 describe('SindriService', () => {
   let service: SindriService;
+  let mockNoirService: jest.Mocked<NoirService>;
 
   beforeEach(() => {
     jest.clearAllMocks();
-    service = new SindriService(); // 各テスト前に新しいインスタンスを作成
+    mockNoirService = new NoirService() as jest.Mocked<NoirService>;
+    service = new SindriService(mockNoirService); // モックインスタンスを注入
 
     jest
       .spyOn(SindriRepository.prototype, 'postRequest')
@@ -80,5 +85,24 @@ describe('SindriService', () => {
     await expect(service.fetchProofDetail('failed-proof-id')).rejects.toThrow(
       'Proving failed'
     );
+  });
+
+  it('should verify proof successfully', async () => {
+    const proofId = '12345';
+    const mockProof = 'fetched-proof-string';
+    const mockProofBytes = new Uint8Array([0xde, 0xad, 0xbe, 0xef]);
+
+    jest.spyOn(service, 'fetchProofDetail').mockResolvedValue(mockProof);
+    jest
+      .spyOn(service, 'convertProofToUint8Array')
+      .mockReturnValue(mockProofBytes);
+    mockNoirService.verifyProof.mockResolvedValue(true);
+
+    const result = await service.verifyProof(proofId);
+
+    expect(service.fetchProofDetail).toHaveBeenCalledWith(proofId);
+    expect(service.convertProofToUint8Array).toHaveBeenCalledWith(mockProof);
+    expect(mockNoirService.verifyProof).toHaveBeenCalledWith(mockProofBytes);
+    expect(result).toBe(true);
   });
 });

@@ -1,0 +1,20 @@
+{
+  "noir_version": "0.22.0+3fae4a03fded4e3f5065e7461c563f7e39745604",
+  "hash": 13240708778770928584,
+  "abi": {
+    "parameters": [
+      {
+        "name": "input",
+        "type": { "kind": "integer", "sign": "unsigned", "width": 8 },
+        "visibility": "private"
+      }
+    ],
+    "param_witnesses": { "input": [{ "start": 1, "end": 2 }] },
+    "return_type": {
+      "abi_type": { "kind": "boolean" },
+      "visibility": "public"
+    },
+    "return_witnesses": [2]
+  },
+  "bytecode": "H4sIAAAAAAAA/61TUQ7CIAwtoMn0w7O0A7by51WcsvsfQZax2BD0x76kaQnk0b62DgDOsMMUs9UPxVw9tzDV36vH/0BGjSs/O+nqcBOi1OKIXUe/Dadi145mRsS2vrE/3pgvPJdOLjdxr1t8KV9+rsVp4TNwktfjFEKex0yeHjimhSOGuExMTJHja2TvMwee05JmTBR8pjUmv1Ziq5cjHk3dGj002jplPYyCBnndsGurpacDvQWVgw1NLBfsDUwbnT+ZBAAA"
+}
