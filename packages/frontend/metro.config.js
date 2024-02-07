@@ -1,9 +1,6 @@
 const { getDefaultConfig } = require('expo/metro-config');
 
-/** @type {import('expo/metro-config').MetroConfig} */
 const config = getDefaultConfig(__dirname);
-
-const defaultResolveRequest = config.resolver.resolveRequest;
 
 config.resolver.resolveRequest = (context, moduleName, platform) => {
   if (moduleName === '@aztec/bb.js') {
@@ -18,7 +15,8 @@ config.resolver.resolveRequest = (context, moduleName, platform) => {
     };
   }
 
-  return defaultResolveRequest(context, moduleName, platform);
+  const Resolver = require('metro-resolver');
+  return Resolver.resolve(context, moduleName, platform);
 };
 
 module.exports = config;
