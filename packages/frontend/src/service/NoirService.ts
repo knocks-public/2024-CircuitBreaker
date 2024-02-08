@@ -27,7 +27,6 @@ class NoirService {
       proof: proofBytes,
       publicInputs: publicInputs,
     };
-    console.log('Proof: ', proof);
     return this.noir.verifyFinalProof(proof);
   }
 }

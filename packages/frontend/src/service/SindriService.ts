@@ -57,7 +57,7 @@ class SindriService {
     }
   }
 
-  async fetchProofDetail(proofId: string): Promise<any> {
+  async fetchProofDetail(proofId: string): Promise<string> {
     console.log('Request the proof detail from Sindri API...');
     const endpoint = `/proof/${proofId}/detail`;
     const proofDetailResponse = await this.repository.pollForStatus(endpoint);
@@ -65,14 +65,14 @@ class SindriService {
     if (proofDetailStatus === 'Failed') {
       throw new Error('Proving failed');
     }
-    console.log(`proofDetail: ${JSON.stringify(proofDetailResponse.data)}`);
     const proof = proofDetailResponse.data.proof.proof;
+    console.log('Proof detail fetched successfully');
+    console.log(`Proof: ${proof}`);
     return proof;
   }
 
   convertProofToUint8Array(proof: string) {
     const result = hexStringToUint8Array(proof);
-    console.log(`Proof: ${result}`);
     return result;
   }
 
