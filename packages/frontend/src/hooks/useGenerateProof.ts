@@ -1,23 +1,19 @@
 import { useState } from 'react';
-import SindriService from '../service/sindriService';
-
-const messages = {
-  success: 'Your age has been verified successfully.',
-  failure: 'Failed to verify your age.',
-};
+import SindriService from '../service/SindriService';
 
 const service = new SindriService();
 
 export const useGenerateProof = () => {
   const [age, setAge] = useState<string>('');
-  const [proofResult, setProofResult] = useState<string>('');
+  const [proofResult, setProof] = useState<string | null>(null); // 状態の初期化
 
   const handleGenerateProof = async () => {
     try {
-      await service.generateProof(parseInt(age, 10));
-      setProofResult(messages.success);
+      const result = await service.generateProof(parseInt(age, 10));
+      setProof(result);
     } catch (error) {
-      setProofResult(messages.failure);
+      console.error(error);
+      setProof(null);
     }
   };
 

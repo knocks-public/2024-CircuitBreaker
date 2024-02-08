@@ -3,9 +3,10 @@ import { StyleSheet } from 'react-native';
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    justifyContent: 'flex-start',
     alignItems: 'center',
-    justifyContent: 'center',
+    paddingTop: 60,
+    backgroundColor: '#fff',
   },
   input: {
     height: 40,
@@ -13,5 +14,13 @@ export const styles = StyleSheet.create({
     borderWidth: 1,
     padding: 10,
     width: '80%',
+  },
+  qrCodeContainer: {
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  camera: {
+    flex: 1,
+    width: '100%',
   },
 });
