@@ -2,7 +2,7 @@ import SindriRepository from '../repository/SindriRepository';
 import NoirService from '../service/NoirService';
 import SindriService from '../service/SindriService';
 
-jest.mock('../service//NoirService');
+jest.mock('../service/NoirService');
 
 describe('SindriService', () => {
   let service: SindriService;
