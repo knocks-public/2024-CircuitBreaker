@@ -4,21 +4,20 @@ import SindriService from '../service/SindriService';
 
 export const useVerifyAge = () => {
   const [isVerifier, setIsVerifier] = useState(false);
-  const [verificationResult, setVerificationResult] = useState<string | null>(
-    null
-  );
+  const [verificationResult, setVerificationResult] = useState<string>("");
 
   const verifyProof = async (proofId: string) => {
     const service = new SindriService();
     try {
       const result = await service.verifyProof(proofId);
       if (result) {
-        setVerificationResult('Adult verification was successful.');
+        setVerificationResult(`Proof ID: ${proofId}\nResult: Adult verification was successful.`);
       } else {
-        setVerificationResult('Verification failed.');
+        setVerificationResult(`Proof ID: ${proofId}\nResult: Verification failed.`);
       }
     } catch (error) {
       Alert.alert('Error', 'An error occurred during verification.');
+      setVerificationResult(`Error occurred during verification.`);
     }
   };
 

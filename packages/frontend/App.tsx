@@ -20,7 +20,7 @@ const App = (): JSX.Element => {
   const [isVerifier, setIsVerifier] = useState(false);
   const [scanned, setScanned] = useState(false);
   const { age, setAge, proofResult, handleGenerateProof } = useGenerateProof();
-  const { verifyProof, verificationResult, setVerificationResult } = useVerifyAge();
+  const { verifyProof, verificationResult } = useVerifyAge();
 
   useEffect(() => {
     (async () => {
@@ -32,7 +32,6 @@ const App = (): JSX.Element => {
   const handleBarCodeScanned = async ({ type, data }) => {
     setScanned(true);
     await verifyProof(data);
-    Alert.alert('Verification Result', `Proof ID: ${data}\nResult: ${verificationResult}`);
   };
 
   return (
@@ -40,7 +39,6 @@ const App = (): JSX.Element => {
       <Switch onValueChange={(newValue) => {
         setIsVerifier(newValue);
         setScanned(false);
-        setVerificationResult(null);
       }} value={isVerifier} />
       {isVerifier ? (
         <>
