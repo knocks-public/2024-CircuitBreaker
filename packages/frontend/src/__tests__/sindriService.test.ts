@@ -1,6 +1,6 @@
 import SindriRepository from '../repository/sindriRepository';
-import NoirService from '../service/noirService';
-import SindriService from '../service/sindriService';
+import NoirService from '../service/NoirService';
+import SindriService from '../service/SindriService';
 
 jest.mock('../service/noirService');
 

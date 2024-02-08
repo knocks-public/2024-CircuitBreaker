@@ -20,7 +20,7 @@ const App = (): JSX.Element => {
   const [isVerifier, setIsVerifier] = useState(false);
   const [scanned, setScanned] = useState(false);
   const { age, setAge, proofResult, handleGenerateProof } = useGenerateProof();
-  const { verifyProof, verificationResult } = useVerifyAge();
+  const { verifyProof, verificationResult, setVerificationResult } = useVerifyAge();
 
   useEffect(() => {
     (async () => {
@@ -29,34 +29,33 @@ const App = (): JSX.Element => {
     })();
   }, []);
 
-  const handleBarCodeScanned = ({ type, data }) => {
+  const handleBarCodeScanned = async ({ type, data }) => {
     setScanned(true);
-    Alert.alert('QR Code Scanned', `Proof ID: ${data}`);
-    if (isVerifier) {
-      verifyProof(data);
-    }
+    await verifyProof(data);
+    Alert.alert('Verification Result', `Proof ID: ${data}\nResult: ${verificationResult}`);
   };
-
-  if (hasPermission === null) {
-    return <Text>Requesting for camera permission...</Text>;
-  }
-
-  if (hasPermission === false) {
-    return <Text>No access to camera.</Text>;
-  }
 
   return (
     <View style={styles.container} onTouchStart={() => Keyboard.dismiss()}>
-      <Switch onValueChange={setIsVerifier} value={isVerifier} />
+      <Switch onValueChange={(newValue) => {
+        setIsVerifier(newValue);
+        setScanned(false);
+        setVerificationResult(null);
+      }} value={isVerifier} />
       {isVerifier ? (
-        scanned && verificationResult ? (
-          <Text>{verificationResult}</Text>
-        ) : (
-          <Camera
-            onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-            style={styles.camera}
-          />
-        )
+        <>
+          {scanned ? (
+            <>
+              <Text>Verification Result: {verificationResult}</Text>
+            </>
+          ) : (
+            <Camera
+              onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+              style={styles.camera}
+            />
+          )}
+          <Button title={'Scan again'} onPress={() => setScanned(false)} />
+        </>
       ) : (
         <>
           <TextInput
@@ -74,9 +73,6 @@ const App = (): JSX.Element => {
             </View>
           )}
         </>
-      )}
-      {scanned && (
-        <Button title={'Scan again'} onPress={() => setScanned(false)} />
       )}
       <StatusBar style="auto" />
     </View>

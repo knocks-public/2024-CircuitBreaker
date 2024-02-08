@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import SindriService from '../service/sindriService';
+import SindriService from '../service/SindriService';
 
 const service = new SindriService();
 

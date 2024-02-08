@@ -11,8 +11,8 @@ class NoirService {
 
   constructor() {
     this.circuit = circuit as CompiledCircuit;
-    this.backend = new BarretenbergBackend(this.circuit);
-    this.noir = new Noir(this.circuit, this.backend);
+    // this.backend = new BarretenbergBackend(this.circuit);
+    // this.noir = new Noir(this.circuit, this.backend);
   }
 
   createPublicInput(): Map<number, string> {
@@ -27,6 +27,8 @@ class NoirService {
       proof: proofBytes,
       publicInputs: publicInputs,
     };
+    console.log('Proof: ', proof);
+    // return true;
     return this.noir.verifyFinalProof(proof);
   }
 }

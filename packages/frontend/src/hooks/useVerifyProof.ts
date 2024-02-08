@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Alert } from 'react-native';
-import SindriService from '../service/sindriService';
+import SindriService from '../service/SindriService';
 
 export const useVerifyAge = () => {
   const [isVerifier, setIsVerifier] = useState(false);

@@ -1,6 +1,6 @@
-import SindriRepository from '../repository/sindriRepository';
+import SindriRepository from '../repository/SindriRepository';
 import { hexStringToUint8Array } from '../utils/bytesStringParser';
-import NoirService from './noirService';
+import NoirService from './NoirService';
 
 class SindriService {
   private repository: SindriRepository;
