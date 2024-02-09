@@ -39,7 +39,10 @@ class SindriService {
     try {
       console.log(`Circuit ID: ${this.circuitId}`);
       console.log('Proving circuit...');
-      const proofInput = { proof_input: `input = ${input}` };
+      const proofInput = {
+        proof_input: `input = ${input}`,
+        perform_verify: 'true'
+      };
       const endpoint = `/circuit/${this.circuitId}/prove`;
 
       const proveResponse = await this.repository.postRequest(
@@ -66,8 +69,10 @@ class SindriService {
       throw new Error('Proving failed');
     }
     const proof = proofDetailResponse.data.proof.proof;
+    const perform_verify = proofDetailResponse.data.perform_verify;
     console.log('Proof detail fetched successfully');
     console.log(`Proof: ${proof}`);
+    console.log(`Perform verify: ${perform_verify}`);
     return proof;
   }
 
