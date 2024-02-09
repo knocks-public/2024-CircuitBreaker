@@ -1,17 +1,12 @@
 import SindriRepository from '../repository/SindriRepository';
-import NoirService from '../service/NoirService';
 import SindriService from '../service/SindriService';
-
-jest.mock('../service/NoirService');
 
 describe('SindriService', () => {
   let service: SindriService;
-  let mockNoirService: jest.Mocked<NoirService>;
 
   beforeEach(() => {
     jest.clearAllMocks();
-    mockNoirService = new NoirService() as jest.Mocked<NoirService>;
-    service = new SindriService(mockNoirService); // モックインスタンスを注入
+    service = new SindriService();
 
     jest
       .spyOn(SindriRepository.prototype, 'postRequest')
@@ -29,7 +24,15 @@ describe('SindriService', () => {
       .mockImplementation((endpoint) => {
         if (endpoint.includes('/detail')) {
           return Promise.resolve({
-            data: { status: 'Ready', proof: { proof: 'fetched-proof-string' } },
+            data: {
+              status: 'Ready',
+              proof: {
+                proof: 'fetched-proof-string',
+              },
+              public: {
+                'Verifier.toml': 'return = true\n',
+              },
+            },
           });
         }
         return Promise.reject(new Error('Endpoint not mocked'));
@@ -44,6 +47,9 @@ describe('SindriService', () => {
               status: 'Ready',
               proof: {
                 proof: 'fetched-proof-string',
+              },
+              public: {
+                'Verifier.toml': 'return = false\n',
               },
             },
           });
@@ -67,44 +73,60 @@ describe('SindriService', () => {
     expect(response.data.status).toBe('Ready');
   });
 
-  it('converts hex string to Uint8Array correctly', () => {
-    const hexString = 'deadbeef';
-    const expectedResult = new Uint8Array([0xde, 0xad, 0xbe, 0xef]);
-    const result = service.convertProofToUint8Array(hexString);
-    expect(result).toEqual(expectedResult);
+  it('returns true for a successful verification', async () => {
+    const proofId = '12345';
+    jest
+      .spyOn(SindriRepository.prototype, 'pollForStatus')
+      .mockResolvedValueOnce({
+        data: {
+          status: 'Ready',
+          public: { 'Verifier.toml': 'return = true\n' },
+        },
+      });
+
+    const isVerified = await service.fetchProofDetail(proofId);
+    expect(isVerified).toBe(true);
   });
 
-  it('fetches proof details successfully and returns proof', async () => {
-    const proofId = '12345';
-    const fetchedProof = await service.fetchProofDetail(proofId);
-    expect(fetchedProof).toBe('fetched-proof-string');
+  it('returns false for a failed verification', async () => {
+    const proofId = '67890';
+    const isVerified = await service.fetchProofDetail(proofId);
+    expect(isVerified).toBe(false);
   });
 
   it('throws an error if proof fetching fails', async () => {
+    const proofId = 'failed-proof-id';
     jest
       .spyOn(SindriRepository.prototype, 'pollForStatus')
       .mockRejectedValueOnce(new Error('Proving failed'));
-    await expect(service.fetchProofDetail('failed-proof-id')).rejects.toThrow(
+
+    await expect(service.fetchProofDetail(proofId)).rejects.toThrow(
       'Proving failed'
     );
   });
 
-  it('should verify proof successfully', async () => {
+  it('should verify proof successfully when verification result is true', async () => {
     const proofId = '12345';
-    const mockProof = 'fetched-proof-string';
-    const mockProofBytes = new Uint8Array([0xde, 0xad, 0xbe, 0xef]);
-
-    jest.spyOn(service, 'fetchProofDetail').mockResolvedValue(mockProof);
-    jest
-      .spyOn(service, 'convertProofToUint8Array')
-      .mockReturnValue(mockProofBytes);
-    mockNoirService.verifyProof.mockResolvedValue(true);
-
+    jest.spyOn(service, 'fetchProofDetail').mockResolvedValue(true);
     const result = await service.verifyProof(proofId);
-
     expect(service.fetchProofDetail).toHaveBeenCalledWith(proofId);
-    expect(service.convertProofToUint8Array).toHaveBeenCalledWith(mockProof);
-    expect(mockNoirService.verifyProof).toHaveBeenCalledWith(mockProofBytes);
     expect(result).toBe(true);
+  });
+
+  it('should not verify proof successfully when verification result is false', async () => {
+    const proofId = '67890';
+    jest.spyOn(service, 'fetchProofDetail').mockResolvedValue(false);
+    const result = await service.verifyProof(proofId);
+    expect(service.fetchProofDetail).toHaveBeenCalledWith(proofId);
+    expect(result).toBe(false);
+  });
+
+  it('should return false when proof fetching fails', async () => {
+    const proofId = 'failed-proof-id';
+    jest
+      .spyOn(service, 'fetchProofDetail')
+      .mockRejectedValue(new Error('Proving failed'));
+    const result = await service.verifyProof(proofId);
+    expect(result).toBe(false);
   });
 });

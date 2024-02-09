@@ -1,6 +1,4 @@
 import SindriRepository from '../repository/SindriRepository';
-import { hexStringToUint8Array } from '../utils/bytesStringParser';
-import NoirService from './NoirService';
 
 class SindriService {
   private static readonly POLL_TIMEOUT_SECONDS = 20 * 60;
@@ -8,12 +6,10 @@ class SindriService {
   private static readonly DEFAULT_CIRCUIT_ID =
     'e98c114f-6b0d-4fe0-9379-4ee91a1c6963';
   private repository: SindriRepository;
-  private noirService: NoirService;
   private circuitId: string;
 
-  constructor(noirService?: NoirService) {
+  constructor() {
     this.repository = new SindriRepository();
-    this.noirService = noirService || new NoirService();
     this.circuitId =
       process.env.EXPO_PUBLIC_CIRCUIT_ID || SindriService.DEFAULT_CIRCUIT_ID;
   }
@@ -60,7 +56,7 @@ class SindriService {
     }
   }
 
-  async fetchProofDetail(proofId: string): Promise<string> {
+  async fetchProofDetail(proofId: string): Promise<boolean> {
     console.log('Request the proof detail from Sindri API...');
     const endpoint = `/proof/${proofId}/detail`;
     const proofDetailResponse = await this.repository.pollForStatus(endpoint);
@@ -68,25 +64,15 @@ class SindriService {
     if (proofDetailStatus === 'Failed') {
       throw new Error('Proving failed');
     }
-    const proof = proofDetailResponse.data.proof.proof;
-    const perform_verify = proofDetailResponse.data.perform_verify;
-    console.log('Proof detail fetched successfully');
-    console.log(`Proof: ${proof}`);
-    console.log(`Perform verify: ${perform_verify}`);
-    return proof;
-  }
-
-  convertProofToUint8Array(proof: string) {
-    const result = hexStringToUint8Array(proof);
-    return result;
+    const verificationResult = proofDetailResponse.data.public['Verifier.toml'];
+    console.log(`Verification Result: ${verificationResult}`);
+    const isVerified = verificationResult.includes('true');
+    return isVerified;
   }
 
   async verifyProof(proofId: string): Promise<boolean> {
-    const proofDetail = await this.fetchProofDetail(proofId);
-    const proofBytes = this.convertProofToUint8Array(proofDetail);
-
     try {
-      return await this.noirService.verifyProof(proofBytes);
+      return await this.fetchProofDetail(proofId);
     } catch (error) {
       console.error('Proof verification failed', error);
       return false;
