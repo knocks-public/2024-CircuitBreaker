@@ -17,7 +17,9 @@ describe('SindriService', () => {
       .spyOn(SindriRepository.prototype, 'postRequest')
       .mockImplementation((endpoint) => {
         if (endpoint.includes('/prove')) {
-          return Promise.resolve({ data: { proof_id: '12345', perform_verify: "true", } });
+          return Promise.resolve({
+            data: { proof_id: '12345', perform_verify: 'true' },
+          });
         }
         return Promise.reject(new Error('Endpoint not mocked'));
       });
@@ -55,7 +57,7 @@ describe('SindriService', () => {
     await service.generateProof(input);
     expect(SindriRepository.prototype.postRequest).toHaveBeenCalledWith(
       `/circuit/e98c114f-6b0d-4fe0-9379-4ee91a1c6963/prove`,
-      { proof_input: `input = ${input}`, perform_verify: "true" }
+      { proof_input: `input = ${input}`, perform_verify: 'true' }
     );
   });
 

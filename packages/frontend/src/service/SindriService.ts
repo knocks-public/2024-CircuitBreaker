@@ -41,7 +41,7 @@ class SindriService {
       console.log('Proving circuit...');
       const proofInput = {
         proof_input: `input = ${input}`,
-        perform_verify: 'true'
+        perform_verify: 'true',
       };
       const endpoint = `/circuit/${this.circuitId}/prove`;
 
