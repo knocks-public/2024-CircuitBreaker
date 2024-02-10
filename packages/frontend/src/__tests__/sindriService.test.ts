@@ -81,6 +81,7 @@ describe('SindriService', () => {
         data: {
           status: 'Ready',
           public: { 'Verifier.toml': 'return = true\n' },
+          perform_verify: true,
         },
       });
 
