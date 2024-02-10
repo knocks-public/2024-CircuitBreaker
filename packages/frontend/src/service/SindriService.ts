@@ -64,10 +64,12 @@ class SindriService {
     if (proofDetailStatus === 'Failed') {
       throw new Error('Proving failed');
     }
-    const verificationResult = proofDetailResponse.data.public['Verifier.toml'];
-    console.log(`Verification Result: ${verificationResult}`);
-    const isVerified = verificationResult.includes('true');
-    return isVerified;
+    const ageVerificationStatus =
+      proofDetailResponse.data.public['Verifier.toml'];
+    console.log(`Verification Result: ${ageVerificationStatus}`);
+    const isProofValid = proofDetailResponse.data.perform_verify;
+    console.log(`Is Verified: ${isProofValid}`);
+    return ageVerificationStatus.includes('true') && isProofValid;
   }
 
   async verifyProof(proofId: string): Promise<boolean> {
