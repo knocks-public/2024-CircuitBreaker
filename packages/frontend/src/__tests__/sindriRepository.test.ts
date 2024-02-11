@@ -44,3 +44,39 @@ describe('SindriRepository', () => {
     );
   });
 });
+
+describe('SindriRepository - pollForStatus', () => {
+  let repo: SindriRepository;
+  const endpoint = '/status';
+  const initialResponse = { data: { status: 'Processing' } };
+  const finalResponse = { data: { status: 'Ready' } };
+
+  beforeEach(() => {
+    repo = new SindriRepository();
+    jest.clearAllMocks();
+  });
+
+  it('should poll endpoint until status is "Ready"', async () => {
+    mockedAxios.get
+      .mockResolvedValueOnce(initialResponse)
+      .mockResolvedValueOnce(initialResponse)
+      .mockResolvedValueOnce(finalResponse);
+
+    const result = await repo.pollForStatus(endpoint, 3);
+    expect(result).toEqual(finalResponse);
+    expect(mockedAxios.get).toHaveBeenCalledTimes(3);
+    expect(mockedAxios.get).toHaveBeenCalledWith(
+      expect.stringContaining(endpoint),
+      expect.objectContaining({ headers: expect.any(Object) })
+    );
+  });
+
+  it('should throw an error if polling times out', async () => {
+    mockedAxios.get.mockResolvedValue(initialResponse);
+
+    await expect(repo.pollForStatus(endpoint, 2)).rejects.toThrow(
+      'Polling timed out after 2 seconds.'
+    );
+    expect(mockedAxios.get).toHaveBeenCalledTimes(2);
+  });
+});
