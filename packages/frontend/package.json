@@ -30,7 +30,8 @@
     "react-native-config": "^1.5.1",
     "react-native-qrcode-svg": "^6.3.0",
     "react-native-svg": "^14.1.0",
-    "react-native-util": "^1.0.2"
+    "react-native-util": "^1.0.2",
+    "expo-dev-client": "~3.3.8"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

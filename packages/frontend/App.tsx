@@ -6,13 +6,13 @@ import {
   Keyboard,
   Switch,
   Text,
-  TextInput,
   View,
 } from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
 import { useGenerateProof } from './src/hooks/useGenerateProof';
 import { useVerifyAge } from './src/hooks/useVerifyProof';
 import { styles } from './src/styles/AppStyles';
+import { scan } from './modules/nfc-module'; // NFCモジュールのインポート
 
 const App = (): JSX.Element => {
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
@@ -28,9 +28,11 @@ const App = (): JSX.Element => {
     })();
   }, []);
 
-  const handleBarCodeScanned = async ({ type, data }) => {
-    setScanned(true);
-    await verifyProof(data);
+  // NFCスキャンの結果を扱う関数
+  const handleScan = async () => {
+    const result = await scan(); // NFCスキャン実行
+    setAge(result); // スキャン結果を年齢として設定
+    handleGenerateProof(); // 年齢検証の証明を生成
   };
 
   return (
@@ -55,14 +57,8 @@ const App = (): JSX.Element => {
         </>
       ) : (
         <>
-          <TextInput
-            style={styles.input}
-            placeholder="Enter your age"
-            value={age}
-            onChangeText={setAge}
-            keyboardType="numeric"
-          />
-          <Button title="Verify Age" onPress={handleGenerateProof} />
+          {/* NFCスキャンボタンを追加 */}
+          <Button title="Scan NFC" onPress={handleScan} />
           {proofResult && proofResult !== '' && (
             <View style={styles.qrCodeContainer}>
               <Text>Proof ID:</Text>

@@ -16,13 +16,28 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.amedama.frontend"
+      "bundleIdentifier": "com.amedama.frontend",
+      "infoPlist": {
+        "NFCReaderUsageDescription": "NFC for reading ids",
+        "com.apple.developer.nfc.readersession.felica.systemcodes": [
+          "0003",
+          "FE00"
+        ]
+      },
+      "entitlements": {
+        "com.apple.developer.nfc.readersession.formats": [
+          "TAG"
+        ]
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
+      "permissions": [
+        "NFC"
+      ],
       "package": "com.amedama.frontend"
     },
     "web": {
