@@ -13,8 +13,78 @@ PODS:
   - EXImageLoader (4.6.0):
     - ExpoModulesCore
     - React-Core
+  - EXJSONUtils (0.12.3)
+  - EXManifests (0.13.2):
+    - ExpoModulesCore
   - Expo (50.0.6):
     - ExpoModulesCore
+  - expo-dev-client (3.3.8):
+    - EXManifests
+    - expo-dev-launcher
+    - expo-dev-menu
+    - expo-dev-menu-interface
+    - EXUpdatesInterface
+  - expo-dev-launcher (3.6.6):
+    - EXManifests
+    - expo-dev-launcher/Main (= 3.6.6)
+    - expo-dev-menu
+    - expo-dev-menu-interface
+    - ExpoModulesCore
+    - EXUpdatesInterface
+    - glog
+    - RCT-Folly (= 2022.05.16.00)
+    - React-Core
+    - React-RCTAppDelegate
+  - expo-dev-launcher/Main (3.6.6):
+    - EXManifests
+    - expo-dev-launcher/Unsafe
+    - expo-dev-menu
+    - expo-dev-menu-interface
+    - ExpoModulesCore
+    - EXUpdatesInterface
+    - glog
+    - RCT-Folly (= 2022.05.16.00)
+    - React-Core
+    - React-RCTAppDelegate
+  - expo-dev-launcher/Unsafe (3.6.6):
+    - EXManifests
+    - expo-dev-menu
+    - expo-dev-menu-interface
+    - ExpoModulesCore
+    - EXUpdatesInterface
+    - glog
+    - RCT-Folly (= 2022.05.16.00)
+    - React-Core
+    - React-RCTAppDelegate
+  - expo-dev-menu (4.5.5):
+    - expo-dev-menu/Main (= 4.5.5)
+    - expo-dev-menu/ReactNativeCompatibles (= 4.5.5)
+    - glog
+    - RCT-Folly (= 2022.05.16.00)
+    - React-Core
+  - expo-dev-menu-interface (1.7.2)
+  - expo-dev-menu/Main (4.5.5):
+    - EXManifests
+    - expo-dev-menu-interface
+    - expo-dev-menu/Vendored
+    - ExpoModulesCore
+    - glog
+    - RCT-Folly (= 2022.05.16.00)
+    - React-Core
+  - expo-dev-menu/ReactNativeCompatibles (4.5.5):
+    - glog
+    - RCT-Folly (= 2022.05.16.00)
+    - React-Core
+  - expo-dev-menu/SafeAreaView (4.5.5):
+    - ExpoModulesCore
+    - glog
+    - RCT-Folly (= 2022.05.16.00)
+    - React-Core
+  - expo-dev-menu/Vendored (4.5.5):
+    - expo-dev-menu/SafeAreaView
+    - glog
+    - RCT-Folly (= 2022.05.16.00)
+    - React-Core
   - ExpoCamera (14.0.4):
     - ExpoModulesCore
     - ZXingObjC/OneD
@@ -30,6 +100,7 @@ PODS:
     - React-NativeModulesApple
     - React-RCTAppDelegate
     - ReactCommon/turbomodule/core
+  - EXUpdatesInterface (0.15.3)
   - FBLazyVector (0.73.4)
   - FBReactNativeSpec (0.73.4):
     - RCT-Folly (= 2022.05.16.00)
@@ -44,6 +115,8 @@ PODS:
     - hermes-engine/Pre-built (= 0.73.4)
   - hermes-engine/Pre-built (0.73.4)
   - libevent (2.1.12)
+  - NfcModule (1.0.0):
+    - ExpoModulesCore
   - RCT-Folly (2022.05.16.00):
     - boost
     - DoubleConversion
@@ -1103,16 +1176,24 @@ DEPENDENCIES:
   - EXConstants (from `../node_modules/expo-constants/ios`)
   - EXFont (from `../node_modules/expo-font/ios`)
   - EXImageLoader (from `../node_modules/expo-image-loader/ios`)
+  - EXJSONUtils (from `../node_modules/expo-json-utils/ios`)
+  - EXManifests (from `../node_modules/expo-manifests/ios`)
   - Expo (from `../node_modules/expo`)
+  - expo-dev-client (from `../node_modules/expo-dev-client/ios`)
+  - expo-dev-launcher (from `../node_modules/expo-dev-launcher`)
+  - expo-dev-menu (from `../node_modules/expo-dev-menu`)
+  - expo-dev-menu-interface (from `../node_modules/expo-dev-menu-interface/ios`)
   - ExpoCamera (from `../node_modules/expo-camera/ios`)
   - ExpoFileSystem (from `../node_modules/expo-file-system/ios`)
   - ExpoKeepAwake (from `../node_modules/expo-keep-awake/ios`)
   - ExpoModulesCore (from `../node_modules/expo-modules-core`)
+  - EXUpdatesInterface (from `../node_modules/expo-updates-interface/ios`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - FBReactNativeSpec (from `../node_modules/react-native/React/FBReactNativeSpec`)
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
   - hermes-engine (from `../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec`)
   - libevent (~> 2.1.12)
+  - NfcModule (from `../modules/nfc-module/ios`)
   - RCT-Folly (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCT-Folly/Fabric (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCTRequired (from `../node_modules/react-native/Libraries/RCTRequired`)
@@ -1180,8 +1261,20 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-font/ios"
   EXImageLoader:
     :path: "../node_modules/expo-image-loader/ios"
+  EXJSONUtils:
+    :path: "../node_modules/expo-json-utils/ios"
+  EXManifests:
+    :path: "../node_modules/expo-manifests/ios"
   Expo:
     :path: "../node_modules/expo"
+  expo-dev-client:
+    :path: "../node_modules/expo-dev-client/ios"
+  expo-dev-launcher:
+    :path: "../node_modules/expo-dev-launcher"
+  expo-dev-menu:
+    :path: "../node_modules/expo-dev-menu"
+  expo-dev-menu-interface:
+    :path: "../node_modules/expo-dev-menu-interface/ios"
   ExpoCamera:
     :path: "../node_modules/expo-camera/ios"
   ExpoFileSystem:
@@ -1190,6 +1283,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-keep-awake/ios"
   ExpoModulesCore:
     :path: "../node_modules/expo-modules-core"
+  EXUpdatesInterface:
+    :path: "../node_modules/expo-updates-interface/ios"
   FBLazyVector:
     :path: "../node_modules/react-native/Libraries/FBLazyVector"
   FBReactNativeSpec:
@@ -1199,6 +1294,8 @@ EXTERNAL SOURCES:
   hermes-engine:
     :podspec: "../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec"
     :tag: hermes-2023-11-17-RNv0.73.0-21043a3fc062be445e56a2c10ecd8be028dd9cc5
+  NfcModule:
+    :path: "../modules/nfc-module/ios"
   RCT-Folly:
     :podspec: "../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec"
   RCTRequired:
@@ -1295,17 +1392,25 @@ SPEC CHECKSUMS:
   EXConstants: 988aa430ca0f76b43cd46b66e7fae3287f9cc2fc
   EXFont: 21b9c760abd593ce8f0d5386b558ced76018506f
   EXImageLoader: 55080616b2fe9da19ef8c7f706afd9814e279b6b
+  EXJSONUtils: 5c42959e87be238b045ef37cc5268b16a6c0ad4a
+  EXManifests: 5e8c29f36c716af768a4ea47ec05e1b89ab93091
   Expo: fb745b3074989670b6641f9f20463e8ee56a69ca
+  expo-dev-client: 025dce84f48b04c60c3891547732f001f6aad777
+  expo-dev-launcher: 3cddfcd8e54748d0046af07dc8e4f58dbb045e93
+  expo-dev-menu: 8088833c320b616a312ffe438fbea5df276c010e
+  expo-dev-menu-interface: 7ba029c9d1a82ac22b9b584c00514860b060553e
   ExpoCamera: 64e9bb61e639dfaec9d12872c5b6bad0c4167b67
   ExpoFileSystem: a9273932e69a9a1e1a8d01b6ba895bb8294bbea2
   ExpoKeepAwake: 0f5cad99603a3268e50af9a6eb8b76d0d9ac956c
   ExpoModulesCore: 96d1751929ad10622773bb729ab28a8423f0dd0c
+  EXUpdatesInterface: 3e444e2093e25b7ca0999a7d8c16e8392dee70c3
   FBLazyVector: 84f6edbe225f38aebd9deaf1540a4160b1f087d7
   FBReactNativeSpec: d0086a479be91c44ce4687a962956a352d2dc697
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
   glog: c5d68082e772fa1c511173d6b30a9de2c05a69a2
   hermes-engine: b2669ce35fc4ac14f523b307aff8896799829fe2
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
+  NfcModule: 3cbc74aabc754903b19cd9fb507809ed7d0fb268
   RCT-Folly: 7169b2b1c44399c76a47b5deaaba715eeeb476c0
   RCTRequired: ab7f915c15569f04a49669e573e6e319a53f9faa
   RCTTypeSafety: 63b97ced7b766865057e7154db0e81ce4ee6cf1e
