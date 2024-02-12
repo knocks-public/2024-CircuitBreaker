@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
+    "build:ios": "eas build --platform ios",
     "start": "expo start",
     "start:nocache": "expo start -c",
     "android": "expo run:android",
