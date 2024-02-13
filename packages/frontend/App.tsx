@@ -12,7 +12,7 @@ import QRCode from 'react-native-qrcode-svg';
 import { useGenerateProof } from './src/hooks/useGenerateProof';
 import { useVerifyAge } from './src/hooks/useVerifyProof';
 import { styles } from './src/styles/AppStyles';
-import { scan } from './modules/nfc-module'; // NFCモジュールのインポート
+import { scan } from './modules/nfc-module';
 
 const App = (): JSX.Element => {
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
@@ -61,7 +61,7 @@ const App = (): JSX.Element => {
         </>
       ) : (
         <>
-          {/* NFCスキャンボタンを追加 */}
+          { }
           <Button title="Scan NFC" onPress={handleScan} />
           {proofResult && proofResult !== '' && (
             <View style={styles.qrCodeContainer}>

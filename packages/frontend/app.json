@@ -19,6 +19,12 @@
       "bundleIdentifier": "com.amedama.frontend",
       "infoPlist": {
         "NFCReaderUsageDescription": "NFC for reading ids",
+        "com.apple.developer.nfc.readersession.iso7816.select-identifiers": [
+          "D392F000260100000001",
+          "D3921000310001010408",
+          "D3921000310001010100",
+          "D3921000310001010401"
+        ],
         "com.apple.developer.nfc.readersession.felica.systemcodes": [
           "0003",
           "FE00"
