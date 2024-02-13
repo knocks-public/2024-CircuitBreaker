@@ -28,11 +28,15 @@ const App = (): JSX.Element => {
     })();
   }, []);
 
-  // NFCスキャンの結果を扱う関数
   const handleScan = async () => {
-    const result = await scan(); // NFCスキャン実行
-    setAge(result); // スキャン結果を年齢として設定
-    handleGenerateProof(); // 年齢検証の証明を生成
+    const result = await scan();
+    setAge(result);
+    handleGenerateProof();
+  };
+
+  const handleBarCodeScanned = async ({ type, data }) => {
+    setScanned(true);
+    await verifyProof(data);
   };
 
   return (
