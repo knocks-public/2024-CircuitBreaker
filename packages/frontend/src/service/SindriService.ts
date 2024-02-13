@@ -4,7 +4,7 @@ class SindriService {
   private static readonly POLL_TIMEOUT_SECONDS = 20 * 60;
   private static readonly POLL_INTERVAL_MS = 1000;
   private static readonly DEFAULT_CIRCUIT_ID =
-    'e98c114f-6b0d-4fe0-9379-4ee91a1c6963';
+    '6ea50e49-065a-4dc6-b7e6-b0e1ba3665f1';
   private repository: SindriRepository;
   private circuitId: string;
 
