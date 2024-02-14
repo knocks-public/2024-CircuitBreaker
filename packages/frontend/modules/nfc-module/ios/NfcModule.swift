@@ -26,9 +26,7 @@ class NfcSession: NSObject, NFCTagReaderSessionDelegate {
     var session: NFCTagReaderSession?
     let semaphore: DispatchSemaphore
     var message: String?
-    // 暗証番号1 と 暗証番号2 をここに追加
     var pin1 = "" // 暗証番号1
-    var pin2 = "" // 暗証番号2
 
     init(semaphore: DispatchSemaphore) {
         self.semaphore = semaphore
@@ -53,172 +51,167 @@ class NfcSession: NSObject, NFCTagReaderSessionDelegate {
                 return
             }
 
-            guard case NFCTag.iso7816(let driversLicenseCardTag) = tag else {
+            guard case NFCTag.iso7816(let mynumberCardTag) = tag else {
                 session.invalidate(errorMessage: "ISO 7816 準拠ではない")
                 return
             }
 
-            session.alertMessage = "運転免許証を読み取っています…"
+            session.alertMessage = "マイナンバーカードを読み取っています…"
 
-            /// MF を選択
-            let adpu = NFCISO7816APDU(instructionClass: 0x00, instructionCode: 0xA4, p1Parameter: 0x00, p2Parameter: 0x00, data: Data([]), expectedResponseLength: -1)
-            driversLicenseCardTag.sendCommand(apdu: adpu) { (responseData, sw1, sw2, error) in
+            /// SELECT FILE: 券面入力補助AP (DF)
+            let profileAID: [UInt8] = [0xD3, 0x92, 0x10, 0x00, 0x31, 0x00, 0x01, 0x01, 0x04, 0x08]
+            let apdu = NFCISO7816APDU(instructionClass: 0x00, instructionCode: 0xA4, p1Parameter: 0x04, p2Parameter: 0x0C, data: Data(profileAID), expectedResponseLength: -1)
+            mynumberCardTag.sendCommand(apdu: apdu) { (responseData, sw1, sw2, error) in
 
                 if let error = error {
                     session.invalidate(errorMessage: error.localizedDescription)
                     return
                 }
 
-                if sw1 != 0x90 {
-                    session.invalidate(errorMessage: "MF の選択でエラー: ステータス \(sw1), \(sw2)")
-                    return
-                }
+                ///  SELECT FILE: 券面入力補助用PIN (EF)
+                let profilePinEFID: [UInt8] = [0x00, 0x11]
+                let selectProfilePinAPDU = NFCISO7816APDU(instructionClass: 0x00, instructionCode: 0xA4, p1Parameter: 0x02, p2Parameter: 0x0C, data: Data(profilePinEFID), expectedResponseLength: -1)
 
-                /// IEF01 を選択
-                let adpu = NFCISO7816APDU(instructionClass: 0x00, instructionCode: 0xA4, p1Parameter: 0x02, p2Parameter: 0x0C, data: Data([0x00, 0x01]), expectedResponseLength: -1)
-                driversLicenseCardTag.sendCommand(apdu: adpu) { (responseData, sw1, sw2, error) in
-
+                mynumberCardTag.sendCommand(apdu: selectProfilePinAPDU) { (responseData, sw1, sw2, error) in
                     if let error = error {
+                        // エラー処理
                         session.invalidate(errorMessage: error.localizedDescription)
                         return
                     }
 
-                    if sw1 != 0x90 {
-                        session.invalidate(errorMessage: "IEF01 の選択でエラー: ステータス \(sw1), \(sw2)")
-                        return
-                    }
-
-                    /// 照合
-                    let adpu = NFCISO7816APDU(instructionClass: 0x00, instructionCode: 0x20, p1Parameter: 0x00, p2Parameter: 0x80, data: Data(self.pin1.convertToJISX0201()), expectedResponseLength: -1)
-                    driversLicenseCardTag.sendCommand(apdu: adpu) { (responseData, sw1, sw2, error) in
-
-                        if let error = error {
-                            session.invalidate(errorMessage: error.localizedDescription)
-                            return
-                        }
-
-                        if sw1 != 0x90 {
-                            if sw1 == 0x63 {
-                                if sw2 == 0x00 {
-                                    session.invalidate(errorMessage: "暗証番号1の照合でエラー: 照合の不一致である")
-                                } else {
-                                    let remaining = sw2 - 0xC0
-                                    session.invalidate(errorMessage: "暗証番号1の照合でエラー: 照合の不一致である 残り試行回数: \(remaining)")
-                                }
-                            } else {
-                                session.invalidate(errorMessage: "暗証番号1の照合でエラー: ステータス \(sw1), \(sw2)")
-                            }
-                            return
-                        }
-
-                        /// IEF02 を選択
-                        let adpu = NFCISO7816APDU(instructionClass: 0x00, instructionCode: 0xA4, p1Parameter: 0x02, p2Parameter: 0x0C, data: Data([0x00, 0x02]), expectedResponseLength: -1)
-                        driversLicenseCardTag.sendCommand(apdu: adpu) { (responseData, sw1, sw2, error) in
-
-                            if let error = error {
-                                session.invalidate(errorMessage: error.localizedDescription)
-                                return
-                            }
-
-                            if sw1 != 0x90 {
-                                session.invalidate(errorMessage: "IEF02 の選択でエラー: ステータス \(sw1), \(sw2)")
-                                return
-                            }
-
-                            /// 照合
-                            let adpu = NFCISO7816APDU(instructionClass: 0x00, instructionCode: 0x20, p1Parameter: 0x00, p2Parameter: 0x80, data: Data(self.pin2.convertToJISX0201()), expectedResponseLength: -1)
-                            driversLicenseCardTag.sendCommand(apdu: adpu) { (responseData, sw1, sw2, error) in
-
-                                if let error = error {
-                                    session.invalidate(errorMessage: error.localizedDescription)
-                                    return
-                                }
-
-                                if sw1 != 0x90 {
-                                    if sw1 == 0x63 {
-                                        if sw2 == 0x00 {
-                                            session.invalidate(errorMessage: "暗証番号2の照合でエラー: 照合の不一致である")
-                                        } else {
-                                            let remaining = sw2 - 0xC0
-                                            session.invalidate(errorMessage: "暗証番号2の照合でエラー: 照合の不一致である 残り試行回数: \(remaining)")
-                                        }
-                                    } else {
-                                        session.invalidate(errorMessage: "暗証番号2の照合でエラー: ステータス \(sw1), \(sw2)")
-                                    }
-                                    return
-                                }
-
-                                /// DF1 を選択
-                                let adpu = NFCISO7816APDU(instructionClass: 0x00, instructionCode: 0xA4, p1Parameter: 0x04, p2Parameter: 0x0C, data: Data([0xA0, 0x00, 0x00, 0x02, 0x31, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]), expectedResponseLength: -1)
-                                driversLicenseCardTag.sendCommand(apdu: adpu) { (responseData, sw1, sw2, error) in
-
-                                    if let error = error {
-                                        session.invalidate(errorMessage: error.localizedDescription)
-                                        return
-                                    }
-
-                                    if sw1 != 0x90 {
-                                        session.invalidate(errorMessage: "DF1 の選択でエラー: ステータス \(sw1), \(sw2)")
-                                        return
-                                    }
-
-                                    /// EF02 を選択
-                                    let adpu = NFCISO7816APDU(instructionClass: 0x00, instructionCode: 0xA4, p1Parameter: 0x02, p2Parameter: 0x0C, data: Data([0x00, 0x02]), expectedResponseLength: -1)
-                                    driversLicenseCardTag.sendCommand(apdu: adpu) { (responseData, sw1, sw2, error) in
-
-                                        if let error = error {
-                                            session.invalidate(errorMessage: error.localizedDescription)
-                                            return
-                                        }
-
-                                        if sw1 != 0x90 {
-                                            session.invalidate(errorMessage: "DF1/EF02 の選択でエラー: ステータス \(sw1), \(sw2)")
-                                            return
-                                        }
-
-                                        /// バイナリを読み取る
-                                        let adpu = NFCISO7816APDU(instructionClass: 0x00, instructionCode: 0xB0, p1Parameter: 0x00, p2Parameter: 0x00, data: Data([]), expectedResponseLength: 82)
-                                        driversLicenseCardTag.sendCommand(apdu: adpu) { (responseData, sw1, sw2, error) in
-
-                                            if let error = error {
-                                                session.invalidate(errorMessage: error.localizedDescription)
-                                                return
-                                            }
-
-                                            if sw1 != 0x90 {
-                                                session.invalidate(errorMessage: "バイナリの読み取りでエラー: ステータス \(sw1), \(sw2)")
-                                                return
-                                            }
-
-                                            /// TLV フィールド
-                                            let tag = responseData[0]
-                                            let length = Int(responseData[1])
-                                            let value = responseData[2..<responseData.count].map { $0 }
-
-                                            let registeredDomicileData = stride(from: 0, to: length, by: 2).map { (i) -> Data in
-                                                var bytes = (UInt16(value[i + 1]) << 8) + UInt16(value[i])
-                                                return Data(bytes: &bytes, count: MemoryLayout<UInt16>.size)
-                                            }
-
-                                            let registeredDomicile = String(jisX0208Data: registeredDomicileData)
-                                            print(registeredDomicile)
-
-                                            session.alertMessage = "完了"
-                                            session.invalidate()
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                    // APDUコマンドが成功したかどうかをチェック
+                    if sw1 == 0x90 && sw2 == 0x00 {
+                        // コマンド成功
+                        print("券面入力補助用PINの選択成功")
+                    } else {
+                        // コマンド失敗
+                        session.invalidate(errorMessage: "券面入力補助用PINの選択失敗: ステータスコード \(sw1), \(sw2)")
                     }
                 }
+
+                // VERIFY: 券面入力補助用PIN (パスワード)
+                self.verifyPin(pin: self.pin1, for: mynumberCardTag)
+
             }
         }
     }
 
     func startSession() {
         self.session = NFCTagReaderSession(pollingOption: .iso14443 , delegate: self)
-        session?.alertMessage = "交通系ICカードをかざしてください"
+        session?.alertMessage = "マイナンバーカードの上に iPhone の上部を載せてください"
         session?.begin()
     }
+
+    /// VERIFY: 券面入力補助用PIN (パスワード)
+    func verifyPin(pin: String, for tag: NFCISO7816Tag) {
+        // PINをData型に変換します。ここでは、PINがASCII文字列であると仮定しています。
+        guard let pinData = pin.data(using: .ascii) else {
+            print("PINのデータ変換に失敗")
+            return
+        }
+
+        // VERIFYコマンドのAPDUを作成します。
+        // P1=0x00, P2=0x80（PINを指定するためのパラメータ）を設定します。
+        let verifyApdu = NFCISO7816APDU(instructionClass: 0x00, instructionCode: 0x20, p1Parameter: 0x00, p2Parameter: 0x80, data: pinData, expectedResponseLength: -1)
+
+        // APDUコマンドをカードに送信します。
+        tag.sendCommand(apdu: verifyApdu) { (responseData, sw1, sw2, error) in
+            if let error = error {
+                // エラー処理
+                print("PIN検証の送信エラー: \(error.localizedDescription)")
+                return
+            }
+
+            // コマンドの実行結果をチェックします。
+            if sw1 == 0x90 && sw2 == 0x00 {
+                // PIN検証成功
+                print("PIN検証成功")
+                self.selectBaseFourInfo(for: tag)
+            } else {
+                // PIN検証失敗
+                print("PIN検証失敗: ステータスコード \(sw1), \(sw2)")
+                // ここに失敗時の処理を記述します。
+            }
+        }
+    }
+
+    /// SELECT FILE: 基本4情報 (EF)
+    func selectBaseFourInfo(for tag: NFCISO7816Tag) {
+        let baseFourInfoEFID: [UInt8] = [0x00, 0x02]
+        let selectBaseFourInfoAPDU = NFCISO7816APDU(instructionClass: 0x00, instructionCode: 0xA4, p1Parameter: 0x02, p2Parameter: 0x0C, data: Data(baseFourInfoEFID), expectedResponseLength: -1)
+
+        tag.sendCommand(apdu: selectBaseFourInfoAPDU) { (responseData, sw1, sw2, error) in
+            if let error = error {
+                // エラー処理
+                print("基本4情報の選択エラー: \(error.localizedDescription)")
+                return
+            }
+
+            // APDUコマンドが成功したかどうかをチェック
+            if sw1 == 0x90 && sw2 == 0x00 {
+                // コマンド成功
+                print("基本4情報の選択成功")
+                // 成功した場合の処理をここに記述します。例えば、基本4情報の読み取りなど
+                // READ BINARY: 基本4情報の読み取り
+                self.readBaseFourInfo(for: tag)
+            } else {
+                // コマンド失敗
+                print("基本4情報の選択失敗: ステータスコード \(sw1), \(sw2)")
+            }
+        }
+    }
+
+    /// READ BINARY: 基本4情報の読み取り後のデータ解析
+    func readBaseFourInfo(for tag: NFCISO7816Tag) {
+        let readBinaryAPDU = NFCISO7816APDU(instructionClass: 0x00, instructionCode: 0xB0, p1Parameter: 0x00, p2Parameter: 0x00, data: Data(), expectedResponseLength: 256)
+
+        tag.sendCommand(apdu: readBinaryAPDU) { (responseData, sw1, sw2, error) in
+            if let error = error {
+                print("基本4情報の読み取りエラー: \(error.localizedDescription)")
+                return
+            }
+
+            if sw1 == 0x90 && sw2 == 0x00 {
+                print("基本4情報の読み取り成功")
+                print("データ: \(responseData)")
+                let NAME_SEGMENT_START = 9
+                let ADDRESS_SEGMENT_START = 11
+                let BIRTHDATE_SEGMENT_START = 13
+                let GENDER_SEGMENT_START = 15
+                // データ解析
+                let name = self.parseData(responseData, segmentStart: NAME_SEGMENT_START)
+                let address = self.parseData(responseData, segmentStart: ADDRESS_SEGMENT_START)
+                let birthdate = self.parseData(responseData, segmentStart: BIRTHDATE_SEGMENT_START)
+                let gender = self.parseData(responseData, segmentStart: GENDER_SEGMENT_START)
+
+                // 結果の表示
+                print("名前: \(name)")
+                print("住所: \(address)")
+                print("生年月日: \(birthdate)")
+                print("性別: \(gender)")
+            } else {
+                print("基本4情報の読み取り失敗: ステータスコード \(sw1), \(sw2)")
+            }
+        }
+    }
+
+    /// データ解析の補助関数
+    func parseData(_ data: Data, segmentStart: Int) -> String {
+        // セグメントの開始位置から属性の長さを取得
+        let attrLengthIndex = segmentStart + 2
+        guard attrLengthIndex < data.count else {
+            return ""
+        }
+        let attrLength = Int(data[attrLengthIndex])
+        let attrStart = attrLengthIndex + 1
+        let attrEnd = attrStart + attrLength
+
+        // 実際の属性データを取り出し
+        guard attrStart < data.count, attrEnd <= data.count, attrLength > 0 else {
+            return ""
+        }
+        let attrData = data[attrStart..<attrEnd]
+        return String(data: attrData, encoding: .utf8) ?? ""
+    }
+
 }
