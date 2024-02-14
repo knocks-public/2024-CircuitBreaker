@@ -1,5 +1,6 @@
 import ExpoModulesCore
 import CoreNFC
+import Foundation
 
 public class NfcModule: Module {
     var session: NfcSession?
@@ -174,6 +175,7 @@ class NfcSession: NSObject, NFCTagReaderSessionDelegate {
             if sw1 == 0x90 && sw2 == 0x00 {
                 print("基本4情報の読み取り成功")
                 print("データ: \(responseData)")
+                self.printData(responseData, isPrintData: true, sw1, sw2)
                 let NAME_SEGMENT_START = 9
                 let ADDRESS_SEGMENT_START = 11
                 let BIRTHDATE_SEGMENT_START = 13
@@ -214,4 +216,16 @@ class NfcSession: NSObject, NFCTagReaderSessionDelegate {
         return String(data: attrData, encoding: .utf8) ?? ""
     }
 
+    func printData(_ responseData: Data, isPrintData: Bool = false, _ sw1: UInt8, _ sw2: UInt8) {
+            let responseData = [UInt8](responseData)
+            let responseString = responseData.map({ (byte) -> String in
+                return byte.toHexString()
+            })
+
+            if isPrintData {
+                print("responseCount: \(responseString.count), response: \(responseString), sw1: \(sw1.toHexString()), sw2: \(sw2.toHexString()), ステータス: \(ISO7816Status.localizedString(forStatusCode: sw1, sw2))")
+            } else {
+                print("responseCount: \(responseString.count), sw1: \(sw1.toHexString()), sw2: \(sw2.toHexString()), ステータス: \(ISO7816Status.localizedString(forStatusCode: sw1, sw2))")
+            }
+        }
 }
