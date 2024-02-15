@@ -70,7 +70,8 @@ class NfcSession: NSObject, NFCTagReaderSessionDelegate {
                 return
             }
 
-            session.alertMessage = "マイナンバーカードを読み取っています…"
+            session.alertMessage = "Reading... MyNumber Card"
+
 
             /// SELECT FILE: 券面入力補助AP (DF)
             let profileAID: [UInt8] = [0xD3, 0x92, 0x10, 0x00, 0x31, 0x00, 0x01, 0x01, 0x04, 0x08]
@@ -97,6 +98,7 @@ class NfcSession: NSObject, NFCTagReaderSessionDelegate {
                     if sw1 == 0x90 && sw2 == 0x00 {
                         // コマンド成功
                         print("券面入力補助用PINの選択成功")
+
                     } else {
                         // コマンド失敗
                         session.invalidate(errorMessage: "券面入力補助用PINの選択失敗: ステータスコード \(sw1), \(sw2)")
@@ -112,7 +114,7 @@ class NfcSession: NSObject, NFCTagReaderSessionDelegate {
 
     func startSession() {
         self.session = NFCTagReaderSession(pollingOption: .iso14443 , delegate: self)
-        session?.alertMessage = "マイナンバーカードの上に iPhone の上部を載せてください"
+        session?.alertMessage = "Touch your MyNumber Card to the iPhone"
         session?.begin()
     }
 
