@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "inro",
-    "slug": "",
+    "name": "Inro",
+    "slug": "Inro",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -16,7 +16,7 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.amedama.frontend",
+      "bundleIdentifier": "com.amedama.inro",
       "infoPlist": {
         "NFCReaderUsageDescription": "NFC for reading ids",
         "com.apple.developer.nfc.readersession.iso7816.select-identifiers": [
@@ -47,7 +47,7 @@
       "permissions": [
         "NFC"
       ],
-      "package": "com.amedama.frontend"
+      "package": "com.amedama.inro"
     },
     "web": {
       "favicon": "./assets/favicon.png"
