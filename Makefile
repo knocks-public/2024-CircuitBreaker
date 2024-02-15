@@ -57,6 +57,3 @@ before_commit: test format lint
 run_frontend:
 	npm run start:frontend
 
-.PHONY: run_backend
-run_backend:
-	npm run start:backend
