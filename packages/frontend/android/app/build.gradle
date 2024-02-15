@@ -83,9 +83,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace 'com.amedama.frontend'
+    namespace 'com.amedama.inro'
     defaultConfig {
-        applicationId 'com.amedama.frontend'
+        applicationId 'com.amedama.inro'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
