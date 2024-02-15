@@ -181,16 +181,16 @@ class NfcSession: NSObject, NFCTagReaderSessionDelegate {
                 let BIRTHDATE_SEGMENT_START = 13
                 let GENDER_SEGMENT_START = 15
                 // データ解析
-                let name = self.parseData(responseData, segmentStart: NAME_SEGMENT_START)
-                let address = self.parseData(responseData, segmentStart: ADDRESS_SEGMENT_START)
-                let birthdate = self.parseData(responseData, segmentStart: BIRTHDATE_SEGMENT_START)
-                let gender = self.parseData(responseData, segmentStart: GENDER_SEGMENT_START)
+                let name = self.parseData(responseData, segmentStart: Int(responseData[NAME_SEGMENT_START]) )
+                let address = self.parseData(responseData, segmentStart: Int(responseData[ADDRESS_SEGMENT_START]))
+                let birthdate = self.parseData(responseData, segmentStart: Int(responseData[BIRTHDATE_SEGMENT_START]) )
+                let gender = self.parseData(responseData, segmentStart: Int(responseData[GENDER_SEGMENT_START]))
 
                 // 結果の表示
-                print("名前: \(name)")
-                print("住所: \(address)")
-                print("生年月日: \(birthdate)")
-                print("性別: \(gender)")
+               print("名前: \(name)")
+               print("住所: \(address)")
+               print("生年月日: \(birthdate)")
+               print("性別: \(gender)")
             } else {
                 print("基本4情報の読み取り失敗: ステータスコード \(sw1), \(sw2)")
             }
@@ -199,20 +199,29 @@ class NfcSession: NSObject, NFCTagReaderSessionDelegate {
 
     /// データ解析の補助関数
     func parseData(_ data: Data, segmentStart: Int) -> String {
-        // セグメントの開始位置から属性の長さを取得
+        let responseData = [UInt8](data)
+        print("responseData: \(responseData)")
         let attrLengthIndex = segmentStart + 2
+        print("attrLengthIndex: \(attrLengthIndex)")
         guard attrLengthIndex < data.count else {
+            print("データ解析エラー: 属性の長さの取得に失敗しました。")
             return ""
         }
         let attrLength = Int(data[attrLengthIndex])
+        print("attrLength: \(attrLength)")
         let attrStart = attrLengthIndex + 1
         let attrEnd = attrStart + attrLength
+        print("attrStart: \(attrStart), attrEnd: \(attrEnd)")
 
-        // 実際の属性データを取り出し
         guard attrStart < data.count, attrEnd <= data.count, attrLength > 0 else {
+            print("データ解析エラー: 属性データの取得に失敗しました。")
+            print("attrStart: \(attrStart), attrEnd: \(attrEnd), attrLength: \(attrLength)")
             return ""
         }
         let attrData = data[attrStart..<attrEnd]
+        print("attrData: \(attrData)")
+        print("attrData: \(attrData as NSData)")
+        print("attrData as string: \(String(data: attrData, encoding: .utf8) ?? "")")
         return String(data: attrData, encoding: .utf8) ?? ""
     }
 
