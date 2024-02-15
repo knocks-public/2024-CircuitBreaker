@@ -17,16 +17,8 @@ public class NfcModule: Module {
                 promise.resolve(self.session?.message)
             }
         }
-
         Function("setPin") { (pin: String) in
             self.session?.pin1 = pin
-        }
-        Function("getBirthdate") { (promise: Promise) in
-            if let birthdate = self.birthdate {
-                promise.resolve(birthdate)
-            } else {
-                promise.reject("Error", "Birthdate not available.")
-            }
         }
         OnCreate {
             semaphore = DispatchSemaphore(value: 0)
