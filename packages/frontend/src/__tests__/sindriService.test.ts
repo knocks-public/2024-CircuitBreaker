@@ -62,7 +62,7 @@ describe('SindriService', () => {
     const input = 20;
     await service.generateProof(input);
     expect(SindriRepository.prototype.postRequest).toHaveBeenCalledWith(
-      `/circuit/e98c114f-6b0d-4fe0-9379-4ee91a1c6963/prove`,
+      `/circuit/6ea50e49-065a-4dc6-b7e6-b0e1ba3665f1/prove`,
       { proof_input: `input = ${input}`, perform_verify: 'true' }
     );
   });

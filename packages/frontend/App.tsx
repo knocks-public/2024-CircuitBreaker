@@ -13,11 +13,14 @@ import QRCode from 'react-native-qrcode-svg';
 import { useGenerateProof } from './src/hooks/useGenerateProof';
 import { useVerifyAge } from './src/hooks/useVerifyProof';
 import { styles } from './src/styles/AppStyles';
+import { scan } from './modules/nfc-module';
+import { calculateAge } from './src/utils/ageCalculator';
 
 const App = (): JSX.Element => {
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const [isVerifier, setIsVerifier] = useState(false);
   const [scanned, setScanned] = useState(false);
+  const [pin, setPin] = useState('');
   const { age, setAge, proofResult, handleGenerateProof } = useGenerateProof();
   const { verifyProof, verificationResult } = useVerifyAge();
 
@@ -31,6 +34,12 @@ const App = (): JSX.Element => {
   const handleBarCodeScanned = async ({ type, data }) => {
     setScanned(true);
     await verifyProof(data);
+  }
+
+  const handleScan = async () => {
+    const result = await scan(pin);
+    const age = calculateAge(result);
+    handleGenerateProof(age);
   };
 
   return (
@@ -55,14 +64,17 @@ const App = (): JSX.Element => {
         </>
       ) : (
         <>
+          { }
           <TextInput
             style={styles.input}
-            placeholder="Enter your age"
-            value={age}
-            onChangeText={setAge}
+            value={pin}
+            onChangeText={setPin}
+            placeholder="Input your PIN"
+            secureTextEntry={true}
             keyboardType="numeric"
           />
-          <Button title="Verify Age" onPress={handleGenerateProof} />
+          { }
+          <Button title="Scan NFC" onPress={handleScan} />
           {proofResult && proofResult !== '' && (
             <View style={styles.qrCodeContainer}>
               <Text>Proof ID:</Text>

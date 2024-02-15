@@ -4,12 +4,12 @@ import SindriService from '../service/SindriService';
 const service = new SindriService();
 
 export const useGenerateProof = () => {
-  const [age, setAge] = useState<string>('');
-  const [proofResult, setProof] = useState<string | null>(null); // 状態の初期化
+  const [age, setAge] = useState<number>(0);
+  const [proofResult, setProof] = useState<string | null>(null);
 
-  const handleGenerateProof = async () => {
+  const handleGenerateProof = async (age) => {
     try {
-      const result = await service.generateProof(parseInt(age, 10));
+      const result = await service.generateProof(age);
       setProof(result);
     } catch (error) {
       console.error(error);
