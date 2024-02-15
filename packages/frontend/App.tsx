@@ -6,7 +6,7 @@ import {
   Keyboard,
   Switch,
   Text,
-  TextInput, // 追加
+  TextInput,
   View,
 } from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
@@ -20,10 +20,9 @@ const App = (): JSX.Element => {
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const [isVerifier, setIsVerifier] = useState(false);
   const [scanned, setScanned] = useState(false);
-  const [pin, setPin] = useState(''); // 暗証番号の状態を追加
+  const [pin, setPin] = useState('');
   const { age, setAge, proofResult, handleGenerateProof } = useGenerateProof();
   const { verifyProof, verificationResult } = useVerifyAge();
-  const [birthdate, setBirthdate] = useState('');
 
   useEffect(() => {
     (async () => {
@@ -32,14 +31,15 @@ const App = (): JSX.Element => {
     })();
   }, []);
 
+  const handleBarCodeScanned = async ({ type, data }) => {
+    setScanned(true);
+    await verifyProof(data);
+  }
+
   const handleScan = async () => {
-    // 暗証番号をNFCスキャン関数に渡す
-    const result = await scan(pin); // `scan`関数を修正して暗証番号を受け取れるようにする必要があります
-    const age = calculateAge(result); // 生年月日から年齢を計算
-    console.log('Age:', age);
-    setAge(age.toString());
-    setBirthdate(result);
-    handleGenerateProof(age.toString());
+    const result = await scan(pin);
+    const age = calculateAge(result);
+    handleGenerateProof(age);
   };
 
   return (
@@ -64,17 +64,16 @@ const App = (): JSX.Element => {
         </>
       ) : (
         <>
-          {/* 暗証番号入力フィールドを追加 */}
+          { }
           <TextInput
-            style={styles.input} // スタイルは適宜定義または修正する
+            style={styles.input}
             value={pin}
             onChangeText={setPin}
-            placeholder="暗証番号を入力"
-            secureTextEntry={true} // 入力をマスクする
-            keyboardType="numeric" // 数字キーボードを使用
+            placeholder="Input your PIN"
+            secureTextEntry={true}
+            keyboardType="numeric"
           />
-          {/* 生年月日を表示するTextコンポーネントを追加 */}
-          <Text style={{ margin: 10 }}>生年月日: {birthdate}</Text>
+          { }
           <Button title="Scan NFC" onPress={handleScan} />
           {proofResult && proofResult !== '' && (
             <View style={styles.qrCodeContainer}>
