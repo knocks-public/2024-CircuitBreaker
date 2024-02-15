@@ -5,10 +5,12 @@ import Foundation
 public class NfcModule: Module {
     var session: NfcSession?
     var semaphore: DispatchSemaphore?
+    var birthdate: String?
     public func definition() -> ModuleDefinition {
         Name("NfcModule")
 
-        AsyncFunction("scan") { (promise: Promise) in
+        AsyncFunction("scan") { (pin: String, promise: Promise) in
+            self.session?.pin1 = pin
             self.session?.startSession()
             DispatchQueue.global(qos: .background).async {
                 self.semaphore?.wait()
@@ -16,9 +18,22 @@ public class NfcModule: Module {
             }
         }
 
+        Function("setPin") { (pin: String) in
+            self.session?.pin1 = pin
+        }
+        Function("getBirthdate") { (promise: Promise) in
+            if let birthdate = self.birthdate {
+                promise.resolve(birthdate)
+            } else {
+                promise.reject("Error", "Birthdate not available.")
+            }
+        }
         OnCreate {
             semaphore = DispatchSemaphore(value: 0)
             session = NfcSession(semaphore: semaphore!)
+            session?.onBirthdateRead = { [weak self] birthdate in
+                self?.birthdate = birthdate
+            }
         }
     }
 }
@@ -27,7 +42,9 @@ class NfcSession: NSObject, NFCTagReaderSessionDelegate {
     var session: NFCTagReaderSession?
     let semaphore: DispatchSemaphore
     var message: String?
-    var pin1 = "" // 暗証番号1
+    var pin1: String = ""
+    var birthdate: String?
+    var onBirthdateRead: ((String) -> Void)?
 
     init(semaphore: DispatchSemaphore) {
         self.semaphore = semaphore
@@ -187,10 +204,11 @@ class NfcSession: NSObject, NFCTagReaderSessionDelegate {
                 let gender = self.parseData(responseData, segmentStart: Int(responseData[GENDER_SEGMENT_START]))
 
                 // 結果の表示
-               print("名前: \(name)")
-               print("住所: \(address)")
-               print("生年月日: \(birthdate)")
-               print("性別: \(gender)")
+                print("名前: \(name)")
+                print("住所: \(address)")
+                print("生年月日: \(birthdate)")
+                print("性別: \(gender)")
+                self.onBirthdateRead?(birthdate)
             } else {
                 print("基本4情報の読み取り失敗: ステータスコード \(sw1), \(sw2)")
             }

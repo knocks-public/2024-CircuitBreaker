@@ -6,6 +6,7 @@ import {
   Keyboard,
   Switch,
   Text,
+  TextInput, // 追加
   View,
 } from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
@@ -18,6 +19,7 @@ const App = (): JSX.Element => {
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const [isVerifier, setIsVerifier] = useState(false);
   const [scanned, setScanned] = useState(false);
+  const [pin, setPin] = useState(''); // 暗証番号の状態を追加
   const { age, setAge, proofResult, handleGenerateProof } = useGenerateProof();
   const { verifyProof, verificationResult } = useVerifyAge();
 
@@ -29,7 +31,8 @@ const App = (): JSX.Element => {
   }, []);
 
   const handleScan = async () => {
-    const result = await scan();
+    // 暗証番号をNFCスキャン関数に渡す
+    const result = await scan(pin); // `scan`関数を修正して暗証番号を受け取れるようにする必要があります
     setAge(result);
     handleGenerateProof();
   };
@@ -61,7 +64,15 @@ const App = (): JSX.Element => {
         </>
       ) : (
         <>
-          { }
+          {/* 暗証番号入力フィールドを追加 */}
+          <TextInput
+            style={styles.input} // スタイルは適宜定義または修正する
+            value={pin}
+            onChangeText={setPin}
+            placeholder="暗証番号を入力"
+            secureTextEntry={true} // 入力をマスクする
+            keyboardType="numeric" // 数字キーボードを使用
+          />
           <Button title="Scan NFC" onPress={handleScan} />
           {proofResult && proofResult !== '' && (
             <View style={styles.qrCodeContainer}>
