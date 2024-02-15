@@ -22,6 +22,7 @@ const App = (): JSX.Element => {
   const [pin, setPin] = useState(''); // 暗証番号の状態を追加
   const { age, setAge, proofResult, handleGenerateProof } = useGenerateProof();
   const { verifyProof, verificationResult } = useVerifyAge();
+  const [birthdate, setBirthdate] = useState('');
 
   useEffect(() => {
     (async () => {
@@ -33,7 +34,8 @@ const App = (): JSX.Element => {
   const handleScan = async () => {
     // 暗証番号をNFCスキャン関数に渡す
     const result = await scan(pin); // `scan`関数を修正して暗証番号を受け取れるようにする必要があります
-    setAge(result);
+    setAge(result); // ここで年齢をセットしていますが、実際には生年月日が返ってくると想定しています
+    setBirthdate(result); // 追加: 生年月日をセット
     handleGenerateProof();
   };
 
@@ -73,6 +75,8 @@ const App = (): JSX.Element => {
             secureTextEntry={true} // 入力をマスクする
             keyboardType="numeric" // 数字キーボードを使用
           />
+          {/* 生年月日を表示するTextコンポーネントを追加 */}
+          <Text style={{ margin: 10 }}>生年月日: {birthdate}</Text>
           <Button title="Scan NFC" onPress={handleScan} />
           {proofResult && proofResult !== '' && (
             <View style={styles.qrCodeContainer}>

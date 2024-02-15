@@ -31,9 +31,6 @@ public class NfcModule: Module {
         OnCreate {
             semaphore = DispatchSemaphore(value: 0)
             session = NfcSession(semaphore: semaphore!)
-            session?.onBirthdateRead = { [weak self] birthdate in
-                self?.birthdate = birthdate
-            }
         }
     }
 }
@@ -44,7 +41,6 @@ class NfcSession: NSObject, NFCTagReaderSessionDelegate {
     var message: String?
     var pin1: String = ""
     var birthdate: String?
-    var onBirthdateRead: ((String) -> Void)?
 
     init(semaphore: DispatchSemaphore) {
         self.semaphore = semaphore
@@ -208,7 +204,7 @@ class NfcSession: NSObject, NFCTagReaderSessionDelegate {
                 print("住所: \(address)")
                 print("生年月日: \(birthdate)")
                 print("性別: \(gender)")
-                self.onBirthdateRead?(birthdate)
+                self.message = birthdate
                 // 読み取りセッションを正常に終了させる
                 self.session?.alertMessage = "Scan Completed!"
                 self.session?.invalidate()
