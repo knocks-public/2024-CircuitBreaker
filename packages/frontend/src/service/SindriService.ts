@@ -35,6 +35,8 @@ class SindriService {
     try {
       console.log(`Circuit ID: ${this.circuitId}`);
       console.log('Proving circuit...');
+      console.log('Requesting proof from Sindri API...');
+      console.log(`Input: ${input}`)
       const proofInput = {
         proof_input: `input = ${input}`,
         perform_verify: 'true',

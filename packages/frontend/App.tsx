@@ -14,6 +14,7 @@ import { useGenerateProof } from './src/hooks/useGenerateProof';
 import { useVerifyAge } from './src/hooks/useVerifyProof';
 import { styles } from './src/styles/AppStyles';
 import { scan } from './modules/nfc-module';
+import { calculateAge } from './src/utils/ageCalculator';
 
 const App = (): JSX.Element => {
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
@@ -34,14 +35,11 @@ const App = (): JSX.Element => {
   const handleScan = async () => {
     // 暗証番号をNFCスキャン関数に渡す
     const result = await scan(pin); // `scan`関数を修正して暗証番号を受け取れるようにする必要があります
-    setAge(result); // ここで年齢をセットしていますが、実際には生年月日が返ってくると想定しています
-    setBirthdate(result); // 追加: 生年月日をセット
-    handleGenerateProof();
-  };
-
-  const handleBarCodeScanned = async ({ type, data }) => {
-    setScanned(true);
-    await verifyProof(data);
+    const age = calculateAge(result); // 生年月日から年齢を計算
+    console.log('Age:', age);
+    setAge(age.toString());
+    setBirthdate(result);
+    handleGenerateProof(age.toString());
   };
 
   return (
