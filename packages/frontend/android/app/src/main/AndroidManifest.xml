@@ -30,6 +30,7 @@
         <category android:name="android.intent.category.BROWSABLE"/>
         <data android:scheme="com.amedama.frontend"/>
         <data android:scheme="exp+frontend"/>
+        <data android:scheme="com.amedama.inro"/>
       </intent-filter>
     </activity>
     <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" android:exported="false"/>

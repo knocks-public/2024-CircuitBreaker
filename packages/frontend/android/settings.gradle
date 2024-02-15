@@ -1,4 +1,4 @@
-rootProject.name = 'frontend'
+rootProject.name = 'Inro'
 
 dependencyResolutionManagement {
   versionCatalogs {
