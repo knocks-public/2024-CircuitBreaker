@@ -209,6 +209,11 @@ class NfcSession: NSObject, NFCTagReaderSessionDelegate {
                 print("生年月日: \(birthdate)")
                 print("性別: \(gender)")
                 self.onBirthdateRead?(birthdate)
+                // 読み取りセッションを正常に終了させる
+                self.session?.alertMessage = "Scan Completed!"
+                self.session?.invalidate()
+                // 非同期処理待機中の他の処理に対して通知を行う
+                self.semaphore.signal()
             } else {
                 print("基本4情報の読み取り失敗: ステータスコード \(sw1), \(sw2)")
             }
