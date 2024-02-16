@@ -9,11 +9,9 @@
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#55B0F8"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.amedama.inro",
@@ -34,9 +32,7 @@
         ]
       },
       "entitlements": {
-        "com.apple.developer.nfc.readersession.formats": [
-          "TAG"
-        ]
+        "com.apple.developer.nfc.readersession.formats": ["TAG"]
       }
     },
     "android": {
@@ -44,9 +40,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "permissions": [
-        "NFC"
-      ],
+      "permissions": ["NFC"],
       "package": "com.amedama.inro"
     },
     "web": {

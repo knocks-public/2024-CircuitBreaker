@@ -43,7 +43,7 @@ const ProveScreen = (): JSX.Element => {
 
   return (
     <View style={styles.container} onTouchStart={() => Keyboard.dismiss()}>
-      <Text>Input your pin code</Text>
+      <Text>Enter the pin code</Text>
       <View style={styles.pinContainer}>
         {Array.from({ length: 4 }).map((_, index) => (
           <TextInput
