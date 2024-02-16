@@ -44,4 +44,14 @@ export const styles = StyleSheet.create({
     margin: 20,
     textAlign: 'center',
   },
+  switchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 20,
+  },
+  switchLabel: {
+    fontSize: 16,
+    marginHorizontal: 8,
+  },
 });

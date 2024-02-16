@@ -38,14 +38,18 @@ const App = (): JSX.Element => {
   return (
     <View style={styles.container} onTouchStart={() => Keyboard.dismiss()}>
       <StatusBar style="auto" />
-      <Switch
-        onValueChange={(newValue) => {
-          setIsVerifier(newValue);
-          setScanned(false);
-        }}
-        value={isVerifier}
-        style={styles.switch}
-      />
+      <View style={styles.switchContainer}>
+        <Text style={styles.switchLabel}>Proof</Text>
+        <Switch
+          onValueChange={(newValue) => {
+            setIsVerifier(newValue);
+            setScanned(false);
+          }}
+          value={isVerifier}
+          style={styles.switch}
+        />
+        <Text style={styles.switchLabel}>Verify</Text>
+      </View>
       {isVerifier ? (
         <>
           {scanned ? (
