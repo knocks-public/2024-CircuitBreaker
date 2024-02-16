@@ -1,7 +1,15 @@
 import { Camera } from 'expo-camera';
 import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useState } from 'react';
-import { Button, Keyboard, Switch, Text, TextInput, View } from 'react-native';
+import {
+  Button,
+  Keyboard,
+  Switch,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
 import { scan } from './modules/nfc-module';
 import { useGenerateProof } from './src/hooks/useGenerateProof';
@@ -79,7 +87,9 @@ const App = (): JSX.Element => {
             maxLength={4}
           />
           {}
-          <Button title="Scan NFC" onPress={handleScan} />
+          <TouchableOpacity onPress={handleScan} style={styles.button}>
+            <Text style={styles.buttonText}>Scan NFC</Text>
+          </TouchableOpacity>
           {proofResult && proofResult !== '' && (
             <View style={styles.qrCodeContainer}>
               <Text>Proof ID:</Text>
