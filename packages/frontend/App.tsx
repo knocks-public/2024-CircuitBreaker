@@ -1,19 +1,12 @@
 import { Camera } from 'expo-camera';
 import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useState } from 'react';
-import {
-  Button,
-  Keyboard,
-  Switch,
-  Text,
-  TextInput,
-  View,
-} from 'react-native';
+import { Button, Keyboard, Switch, Text, TextInput, View } from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
+import { scan } from './modules/nfc-module';
 import { useGenerateProof } from './src/hooks/useGenerateProof';
 import { useVerifyAge } from './src/hooks/useVerifyProof';
 import { styles } from './src/styles/AppStyles';
-import { scan } from './modules/nfc-module';
 import { calculateAge } from './src/utils/ageCalculator';
 
 const App = (): JSX.Element => {
@@ -34,7 +27,7 @@ const App = (): JSX.Element => {
   const handleBarCodeScanned = async ({ type, data }) => {
     setScanned(true);
     await verifyProof(data);
-  }
+  };
 
   const handleScan = async () => {
     const result = await scan(pin);
@@ -44,15 +37,22 @@ const App = (): JSX.Element => {
 
   return (
     <View style={styles.container} onTouchStart={() => Keyboard.dismiss()}>
-      <Switch onValueChange={(newValue) => {
-        setIsVerifier(newValue);
-        setScanned(false);
-      }} value={isVerifier} />
+      <StatusBar style="auto" />
+      <Switch
+        onValueChange={(newValue) => {
+          setIsVerifier(newValue);
+          setScanned(false);
+        }}
+        value={isVerifier}
+        style={styles.switch}
+      />
       {isVerifier ? (
         <>
           {scanned ? (
             <>
-              <Text>Verification Result: {verificationResult}</Text>
+              <Text style={styles.verificationResult}>
+                Verification Result: {verificationResult}
+              </Text>
             </>
           ) : (
             <Camera
@@ -64,16 +64,17 @@ const App = (): JSX.Element => {
         </>
       ) : (
         <>
-          { }
+          {}
           <TextInput
             style={styles.input}
             value={pin}
             onChangeText={setPin}
-            placeholder="Input your PIN"
+            placeholder="XXXX (Input your PIN)"
             secureTextEntry={true}
             keyboardType="numeric"
+            maxLength={4}
           />
-          { }
+          {}
           <Button title="Scan NFC" onPress={handleScan} />
           {proofResult && proofResult !== '' && (
             <View style={styles.qrCodeContainer}>
@@ -83,7 +84,6 @@ const App = (): JSX.Element => {
           )}
         </>
       )}
-      <StatusBar style="auto" />
     </View>
   );
 };
