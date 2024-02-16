@@ -1,6 +1,6 @@
 import { Camera } from 'expo-camera';
 import { StatusBar } from 'expo-status-bar';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Button,
   Keyboard,
@@ -18,10 +18,17 @@ import { styles } from './src/styles/AppStyles';
 import { calculateAge } from './src/utils/ageCalculator';
 
 const App = (): JSX.Element => {
+  const pinInputRefs = [
+    useRef<TextInput>(null),
+    useRef<TextInput>(null),
+    useRef<TextInput>(null),
+    useRef<TextInput>(null),
+  ];
+
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const [isVerifier, setIsVerifier] = useState(false);
   const [scanned, setScanned] = useState(false);
-  const [pin, setPin] = useState('');
+  const [pin, setPin] = useState(['', '', '', '']);
   const { age, setAge, proofResult, handleGenerateProof } = useGenerateProof();
   const { verifyProof, verificationResult } = useVerifyAge();
 
@@ -38,9 +45,21 @@ const App = (): JSX.Element => {
   };
 
   const handleScan = async () => {
-    const result = await scan(pin);
+    const result = await scan(pin.join(''));
     const age = calculateAge(result);
     handleGenerateProof(age);
+  };
+
+  const handlePinChange = (text, index) => {
+    const newPin = [...pin];
+    newPin[index] = text;
+    setPin(newPin);
+
+    if (text !== '' && index < 3) {
+      pinInputRefs[index + 1].current?.focus();
+    } else if (text === '' && index > 0) {
+      pinInputRefs[index - 1].current?.focus();
+    }
   };
 
   return (
@@ -77,15 +96,20 @@ const App = (): JSX.Element => {
       ) : (
         <>
           {}
-          <TextInput
-            style={styles.input}
-            value={pin}
-            onChangeText={setPin}
-            placeholder="XXXX (Input your PIN)"
-            secureTextEntry={true}
-            keyboardType="numeric"
-            maxLength={4}
-          />
+          <View style={styles.pinContainer}>
+            {Array.from({ length: 4 }).map((_, index) => (
+              <TextInput
+                ref={pinInputRefs[index]}
+                key={index}
+                style={styles.pinInputBox}
+                value={pin[index] || ''}
+                onChangeText={(text) => handlePinChange(text, index)}
+                maxLength={1}
+                keyboardType="numeric"
+                secureTextEntry={true}
+              />
+            ))}
+          </View>
           {}
           <TouchableOpacity onPress={handleScan} style={styles.button}>
             <Text style={styles.buttonText}>Scan NFC</Text>

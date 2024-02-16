@@ -55,7 +55,7 @@ export const styles = StyleSheet.create({
     marginHorizontal: 8,
   },
   button: {
-    backgroundColor: '#007bff', // 例: 明るい青色
+    backgroundColor: '#007bff',
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
@@ -70,5 +70,24 @@ export const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
     textAlign: 'center',
+  },
+  pinContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 20,
+  },
+  pinInputBox: {
+    width: 40,
+    height: 40,
+    borderWidth: 1,
+    borderColor: '#cccccc',
+    textAlign: 'center',
+    fontSize: 20,
+    borderRadius: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
+    elevation: 3,
   },
 });
