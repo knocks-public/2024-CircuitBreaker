@@ -9,6 +9,10 @@
 
 # Inro
 
+<div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center">
+  <img src="./packages/frontend/assets/icon.png" width="200" height="200" />
+</div>
+
 `Inro` is a state-of-the-art application dedicated to digital identity verification and privacy preservation. Created during the `2024-CircuitBreaker` hackathon, `Inro` seeks to fulfill the societal demand for a secure age verification mechanism in online platforms, adult content access control, among others, without sacrificing user privacy.
 
 ## Use Cases
