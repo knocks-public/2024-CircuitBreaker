@@ -9,6 +9,8 @@
 
 # Inro
 
+ETH Global Link: https://ethglobal.com/showcase/inro-rped8
+
 <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center">
   <img src="./packages/frontend/assets/icon.png" width="200" height="200" />
 </div>
