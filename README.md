@@ -44,6 +44,11 @@
 
 Inro prioritizes privacy, security, and simplicity. The backend leverages the Sindri API for zero-knowledge proofs, with Noir for crafting age verification logic, ensuring only necessary age information is verified. The frontend uses modern JavaScript frameworks, including React Native, for a smooth, cross-platform user experience. The integration of Expo's Native Modules for NFC card scanning exemplifies Inro's innovative use of technology.
 
+# Images
+
+## Screenshots
+
+
 ## Getting Started
 
 To run Inro locally, follow these steps:
@@ -115,3 +120,8 @@ We welcome contributions. Please submit proposals via pull requests or issues.
 ## License
 
 `Inro` is licensed under the [MIT License](LICENSE).
+
+# The knocks team
+
+- [Shingo Takagi](https://www.linkedin.com/in/shingo-takagi-8a017224a/) - Full Stack Developer
+- [Susumu Tomita](https://www.linkedin.com/in/susumutomita/) - Full Stack Developer
