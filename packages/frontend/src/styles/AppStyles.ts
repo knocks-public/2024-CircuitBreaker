@@ -44,11 +44,16 @@ export const styles = StyleSheet.create({
     margin: 20,
     textAlign: 'center',
   },
-  switchContainer: {
+  switchContainerBottom: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
     flexDirection: 'row',
-    alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 20,
+    alignItems: 'center',
+    marginBottom: 35,
+    backgroundColor: '#fff',
   },
   switchLabel: {
     fontSize: 16,

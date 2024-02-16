@@ -65,18 +65,6 @@ const App = (): JSX.Element => {
   return (
     <View style={styles.container} onTouchStart={() => Keyboard.dismiss()}>
       <StatusBar style="auto" />
-      <View style={styles.switchContainer}>
-        <Text style={styles.switchLabel}>Proof</Text>
-        <Switch
-          onValueChange={(newValue) => {
-            setIsVerifier(newValue);
-            setScanned(false);
-          }}
-          value={isVerifier}
-          style={styles.switch}
-        />
-        <Text style={styles.switchLabel}>Verify</Text>
-      </View>
       {isVerifier ? (
         <>
           {scanned ? (
@@ -122,6 +110,18 @@ const App = (): JSX.Element => {
           )}
         </>
       )}
+      <View style={styles.switchContainerBottom}>
+        <Text style={styles.switchLabel}>Proof</Text>
+        <Switch
+          onValueChange={(newValue) => {
+            setIsVerifier(newValue);
+            setScanned(false);
+          }}
+          value={isVerifier}
+          style={styles.switch}
+        />
+        <Text style={styles.switchLabel}>Verify</Text>
+      </View>
     </View>
   );
 };
