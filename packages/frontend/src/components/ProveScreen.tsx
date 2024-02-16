@@ -1,5 +1,11 @@
 import React, { useRef, useState } from 'react';
-import { Text, TextInput, TouchableOpacity, View } from 'react-native';
+import {
+  Keyboard,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
 import { scan } from '../../modules/nfc-module';
 import { useGenerateProof } from '../hooks/useGenerateProof';
@@ -36,7 +42,7 @@ const ProveScreen = (): JSX.Element => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={styles.container} onTouchStart={() => Keyboard.dismiss()}>
       <View style={styles.pinContainer}>
         {Array.from({ length: 4 }).map((_, index) => (
           <TextInput
