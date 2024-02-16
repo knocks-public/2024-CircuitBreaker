@@ -14,10 +14,11 @@ const VerifyScreen = (): JSX.Element => {
     (async () => {
       const { status } = await Camera.requestCameraPermissionsAsync();
       setHasPermission(status === 'granted');
+      console.log('Camera permission status:', hasPermission);
     })();
   }, []);
 
-  const handleBarCodeScanned = async ({ type, data }) => {
+  const handleBarCodeScanned = async ({ data }: { data: string }) => {
     setScanned(true);
     await verifyProof(data);
   };

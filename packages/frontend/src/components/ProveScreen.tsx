@@ -29,7 +29,7 @@ const ProveScreen = (): JSX.Element => {
     handleGenerateProof(age);
   };
 
-  const handlePinChange = (text, index) => {
+  const handlePinChange = (text: string, index: number) => {
     const newPin = [...pin];
     newPin[index] = text;
     setPin(newPin);
