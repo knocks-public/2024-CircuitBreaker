@@ -17,6 +17,10 @@ ETH Global Link: https://ethglobal.com/showcase/inro-rped8
 
 `Inro` is a state-of-the-art application dedicated to digital identity verification and privacy preservation. Created during the `2024-CircuitBreaker` hackathon, `Inro` seeks to fulfill the societal demand for a secure age verification mechanism in online platforms, adult content access control, among others, without sacrificing user privacy.
 
+## System Overview
+
+<img src=https://github.com/knocks-public/2024-CircuitBreaker/assets/66736869/bad68dd0-5f02-418d-92b7-1ea06867dfb1 width="500">
+
 ## Use Cases
 
 `Inro` facilitates age verification without revealing personal information, making it ideal for bars, rental shops, and similar establishments. The process is simplified into four steps:
@@ -112,7 +116,7 @@ Copy `.env_sample` to `.env` and adjust as necessary:
 
 `Inro` aims
 
- to revolutionize digital identity verification by:
+to revolutionize digital identity verification by:
 
 1. **Automating Age Verification in Bars**: Enhancing efficiency by streamlining the age verification process.
 2. **Improving the eKYC Process**: Significantly reducing costs and waiting times for account openings, thereby lowering labor costs associated with manual verifications.
