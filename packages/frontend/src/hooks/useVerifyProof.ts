@@ -4,7 +4,7 @@ import SindriService from '../service/SindriService';
 
 export const useVerifyAge = () => {
   const [isVerifier, setIsVerifier] = useState(false);
-  const [verificationSuccess, setVerificationSuccess] = useState(false);
+  const [verificationSuccess, setVerificationSuccess] = useState(true);
   const [verificationResult, setVerificationResult] = useState<string>('');
 
   const verifyProof = async (proofId: string) => {
