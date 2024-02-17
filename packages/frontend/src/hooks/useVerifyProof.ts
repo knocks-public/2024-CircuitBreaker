@@ -12,14 +12,10 @@ export const useVerifyAge = () => {
     try {
       const result = await service.verifyProof(proofId);
       if (result) {
-        setVerificationResult(
-          `Adult verification was successful.`
-        );
+        setVerificationResult(`Adult verification was successful.`);
         setVerificationSuccess(true);
       } else {
-        setVerificationResult(
-          `Verification failed.`
-        );
+        setVerificationResult(`Verification failed.`);
         setVerificationSuccess(false);
       }
     } catch (error) {
@@ -29,5 +25,11 @@ export const useVerifyAge = () => {
     }
   };
 
-  return { isVerifier, setIsVerifier, verifyProof, verificationResult, verificationSuccess };
+  return {
+    isVerifier,
+    setIsVerifier,
+    verifyProof,
+    verificationResult,
+    verificationSuccess,
+  };
 };

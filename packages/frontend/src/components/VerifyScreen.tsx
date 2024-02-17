@@ -8,7 +8,8 @@ import { styles } from '../styles/AppStyles';
 const VerifyScreen = (): JSX.Element => {
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const [scanned, setScanned] = useState(false);
-  const { verifyProof, verificationResult, verificationSuccess } = useVerifyAge();
+  const { verifyProof, verificationResult, verificationSuccess } =
+    useVerifyAge();
 
   useEffect(() => {
     (async () => {
@@ -27,7 +28,11 @@ const VerifyScreen = (): JSX.Element => {
     <View style={styles.container}>
       <StatusBar style="auto" />
       {scanned ? (
-        <Text style={verificationSuccess ? styles.successMessage : styles.failMessage}>
+        <Text
+          style={
+            verificationSuccess ? styles.successMessage : styles.failMessage
+          }
+        >
           Verification Result: {verificationResult}
         </Text>
       ) : (
