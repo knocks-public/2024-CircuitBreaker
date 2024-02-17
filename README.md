@@ -48,6 +48,10 @@ Inro prioritizes privacy, security, and simplicity. The backend leverages the Si
 
 # Images
 
+## System Overview
+
+<img src=https://github.com/knocks-public/2024-CircuitBreaker/assets/66736869/bad68dd0-5f02-418d-92b7-1ea06867dfb1 width="600">
+
 ## Screenshots
 
 <img src=https://github.com/knocks-public/2024-CircuitBreaker/assets/11481781/67752380-cd64-4fb6-a245-cb4747d97e35 width=19%>
@@ -112,7 +116,7 @@ Copy `.env_sample` to `.env` and adjust as necessary:
 
 `Inro` aims
 
- to revolutionize digital identity verification by:
+to revolutionize digital identity verification by:
 
 1. **Automating Age Verification in Bars**: Enhancing efficiency by streamlining the age verification process.
 2. **Improving the eKYC Process**: Significantly reducing costs and waiting times for account openings, thereby lowering labor costs associated with manual verifications.
