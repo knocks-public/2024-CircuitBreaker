@@ -58,6 +58,7 @@ Inro prioritizes privacy, security, and simplicity. The backend leverages the Si
 <img src=https://github.com/knocks-public/2024-CircuitBreaker/assets/11481781/239a4a0e-1ff7-469b-b9a0-7201e644f69b width=19%>
 <img src=https://github.com/knocks-public/2024-CircuitBreaker/assets/11481781/091adb57-bb35-410d-96ad-0ed38ece1c24 width=19%>
 <img src=https://github.com/knocks-public/2024-CircuitBreaker/assets/11481781/74e4c3f9-614f-4b37-a201-5d6db936f1ab width=19%>
+<img src=https://github.com/knocks-public/2024-CircuitBreaker/assets/11481781/98d1e650-281d-42f3-aae7-ea089432f236 width=19%>
 
 ## Getting Started
 
