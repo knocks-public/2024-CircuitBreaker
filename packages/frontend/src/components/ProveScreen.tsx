@@ -59,11 +59,11 @@ const ProveScreen = (): JSX.Element => {
         ))}
       </View>
       <TouchableOpacity onPress={handleScan} style={styles.button}>
-        <Text style={styles.buttonText}>Scan NFC</Text>
+        <Text style={styles.buttonText}>Start Scan Your ID</Text>
       </TouchableOpacity>
       {proofResult && proofResult !== '' && (
         <View style={styles.qrCodeContainer}>
-          <Text>Proof ID:</Text>
+          <Text>Show this QR code to the verifier</Text>
           <QRCode value={proofResult} size={200} />
         </View>
       )}
