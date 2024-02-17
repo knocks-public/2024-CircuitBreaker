@@ -17,10 +17,6 @@ ETH Global Link: https://ethglobal.com/showcase/inro-rped8
 
 `Inro` is a state-of-the-art application dedicated to digital identity verification and privacy preservation. Created during the `2024-CircuitBreaker` hackathon, `Inro` seeks to fulfill the societal demand for a secure age verification mechanism in online platforms, adult content access control, among others, without sacrificing user privacy.
 
-## System Overview
-
-<img src=https://github.com/knocks-public/2024-CircuitBreaker/assets/66736869/bad68dd0-5f02-418d-92b7-1ea06867dfb1 width="500">
-
 ## Use Cases
 
 `Inro` facilitates age verification without revealing personal information, making it ideal for bars, rental shops, and similar establishments. The process is simplified into four steps:
@@ -51,6 +47,10 @@ ETH Global Link: https://ethglobal.com/showcase/inro-rped8
 Inro prioritizes privacy, security, and simplicity. The backend leverages the Sindri API for zero-knowledge proofs, with Noir for crafting age verification logic, ensuring only necessary age information is verified. The frontend uses modern JavaScript frameworks, including React Native, for a smooth, cross-platform user experience. The integration of Expo's Native Modules for NFC card scanning exemplifies Inro's innovative use of technology.
 
 # Images
+
+## System Overview
+
+<img src=https://github.com/knocks-public/2024-CircuitBreaker/assets/66736869/bad68dd0-5f02-418d-92b7-1ea06867dfb1 width="600">
 
 ## Screenshots
 
