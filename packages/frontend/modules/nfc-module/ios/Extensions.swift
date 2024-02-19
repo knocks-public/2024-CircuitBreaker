@@ -110,113 +110,112 @@ public extension Data {
     }
 }
 
-
 public enum ISO7816Status {
     public static func localizedString(forStatusCode sw1: UInt8, _ sw2: UInt8) -> String {
         let statusCode = (sw1, sw2)
         switch statusCode {
         case (0x90, 0x00):
-            return "正常終了"
+            return "Operation completed successfully"
         case (0x62, 0x00):
-            return "情報なし"
+            return "No information given"
         case (0x62, 0x81):
-            return "出力データに異常がある"
+            return "Part of returned data may be corrupted"
         case (0x62, 0x82):
-            return "Nc バイトを読み出す前にファイルもしくはレコードの終端に達した、または検索に失敗した"
+            return "End of file/record reached before reading Le bytes or unsuccessful search"
         case (0x62, 0x83):
-            return "選択したファイル DF が閉塞している"
+            return "Selected file deactivated"
         case (0x62, 0x84):
-            return "ファイルまたはデータ制御情報が、規定の書式になっていない"
+            return "File control information not formatted according to specification"
         case (0x62, 0x85):
-            return "選択したファイルが、終了状態"
+            return "Selected file in termination state"
         case (0x62, 0x86):
-            return "カードのセンサから利用可能な入力データがない"
+            return "No input data available from a sensor on the card"
         case (0x62, 0x87):
-            return "参照レコードのうち、少なくとも1つは非活性化されている"
+            return "At least one of the reference records was deactivated"
         case (0x63, 0x00):
-            return "照合の不一致である"
+            return "Verification failed"
         case (0x63, 0x81):
-            return "今回の書き込みによって、ファイルがいっぱいになった"
+            return "File filled up by the last write"
         case (0x63, 0xC0):
-            return "照合の不一致である（残りの試行回数: 0）"
+            return "Verification failed (0 attempts remaining)"
         case (0x63, 0xC1):
-            return "照合の不一致である（残りの試行回数: 1）"
+            return "Verification failed (1 attempt remaining)"
         case (0x63, 0xC2):
-            return "照合の不一致である（残りの試行回数: 2）"
+            return "Verification failed (2 attempts remaining)"
         case (0x63, 0xC3):
-            return "照合の不一致である（残りの試行回数: 3）"
+            return "Verification failed (3 attempts remaining)"
         case (0x63, 0xC4):
-            return "照合の不一致である（残りの試行回数: 4）"
+            return "Verification failed (4 attempts remaining)"
         case (0x63, 0xC5):
-            return "照合の不一致である（残りの試行回数: 5）"
+            return "Verification failed (5 attempts remaining)"
         case (0x63, 0xC6):
-            return "照合の不一致である（残りの試行回数: 6）"
+            return "Verification failed (6 attempts remaining)"
         case (0x63, 0xC7):
-            return "照合の不一致である（残りの試行回数: 7）"
+            return "Verification failed (7 attempts remaining)"
         case (0x63, 0xC8):
-            return "照合の不一致である（残りの試行回数: 8）"
+            return "Verification failed (8 attempts remaining)"
         case (0x63, 0xC9):
-            return "照合の不一致である（残りの試行回数: 9）"
+            return "Verification failed (9 attempts remaining)"
         case (0x63, 0xCA):
-            return "照合の不一致である（残りの試行回数: 10）"
+            return "Verification failed (10 attempts remaining)"
         case (0x63, 0xCB):
-            return "照合の不一致である（残りの試行回数: 11）"
+            return "Verification failed (11 attempts remaining)"
         case (0x63, 0xCC):
-            return "照合の不一致である（残りの試行回数: 12）"
+            return "Verification failed (12 attempts remaining)"
         case (0x63, 0xCD):
-            return "照合の不一致である（残りの試行回数: 13）"
+            return "Verification failed (13 attempts remaining)"
         case (0x63, 0xCE):
-            return "照合の不一致である（残りの試行回数: 14）"
+            return "Verification failed (14 attempts remaining)"
         case (0x63, 0xCF):
-            return "照合の不一致である（残りの試行回数: 15）"
+            return "Verification failed (15 attempts remaining)"
         case (0x64, 0x00):
-            return "ファイル制御情報に異常がある"
+            return "File control information with incorrect values"
         case (0x65, 0x81):
-            return "メモリの書き込みが失敗した"
+            return "Memory failure"
         case (0x67, 0x00):
-            return "Lc/Leが間違っている"
+            return "Wrong length, no further information"
         case (0x68, 0x81):
-            return "指定された論理チャネルの番号によるアクセス機能を提供していない"
+            return "Logical channel not supported"
         case (0x68, 0x82):
-            return "セキュアメッセージング機能を提供していない"
+            return "Secure messaging not supported"
         case (0x69, 0x81):
-            return "ファイル構造と矛盾したコマンドである"
+            return "Command incompatible with file structure"
         case (0x69, 0x82):
-            return "セキュリティステータスが満足されていない"
+            return "Security status not satisfied"
         case (0x69, 0x84):
-            return "参照されたIEFが閉塞している"
+            return "Referenced data invalidated"
         case (0x69, 0x85):
-            return "コマンドの使用条件が満足されていない"
+            return "Conditions of use not satisfied"
         case (0x69, 0x86):
-            return "カレントEFが無い"
+            return "No current EF"
         case (0x6A, 0x80):
-            return "コマンドデータフィールドのタグが正しくない"
+            return "Incorrect parameters in the data field"
         case (0x6A, 0x81):
-            return "機能を提供していない"
+            return "Function not supported"
         case (0x6A, 0x82):
-            return "ファイルまたはアプリケーションが見つからない"
+            return "File not found"
         case (0x6A, 0x83):
-            return "レコードが見つからない"
+            return "Record not found"
         case (0x6A, 0x84):
-            return "ファイル内のメモリ領域が足りない"
+            return "Insufficient memory space in the file"
         case (0x6A, 0x85):
-            return "Lcの値がTLV構造に矛盾している"
+            return "Lc inconsistent with TLV structure"
         case (0x6A, 0x86):
-            return "P1-P2が正しくない"
+            return "Incorrect parameters P1-P2"
         case (0x6A, 0x87):
-            return "Lcの値がP1-P2に矛盾している"
+            return "Lc inconsistent with P1-P2"
         case (0x6A, 0x88):
-            return "参照されたキーが正しく設定されていない"
+            return "Referenced data not found"
         case (0x6B, 0x00):
-            return "EF範囲外にオフセット指定した"
+            return "Reference point in the file uncorrected"
         case (0x6D, 0x00):
-            return "INSが提供されていない"
+            return "Instruction code not supported or invalid"
         case (0x6E, 0x00):
-            return "CLAが提供されていない"
+            return "Class not supported"
         case (0x6F, 0x00):
-            return "自己診断異常"
+            return "No precise diagnosis"
         default:
-            return "ステータスコードが不明 sw1: \(sw1.toHexString()), sw2: \(sw2.toHexString())"
+            return "Unknown status code sw1: \(sw1.toHexString()), sw2: \(sw2.toHexString())"
         }
     }
 }
