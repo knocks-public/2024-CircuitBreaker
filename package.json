@@ -29,7 +29,7 @@
     "lint-staged": "^15.2.2",
     "prettier": "^3.2.5",
     "rimraf": "^5.0.5",
-    "textlint": "^14.0.3",
+    "textlint": "^14.0.4",
     "textlint-rule-no-mixed-zenkaku-and-hankaku-alphabet": "^1.0.1",
     "textlint-rule-no-mixed-zenkaku-and-hankaku-number": "^1.0.0",
     "textlint-rule-preset-ja-spacing": "^2.2.0",
