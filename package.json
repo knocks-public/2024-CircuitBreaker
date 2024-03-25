@@ -21,7 +21,7 @@
     "start:frontend": "cd packages/frontend && npm start"
   },
   "devDependencies": {
-    "@tsconfig/react-native": "^3.0.3",
+    "@tsconfig/react-native": "^3.0.4",
     "@types/jest": "^29.5.12",
     "@types/react": "^18.2.63",
     "@types/react-test-renderer": "^18.0.7",
