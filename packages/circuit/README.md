@@ -85,12 +85,7 @@ async function main() {
     }
 
     // Retrieve output from the proof.
-    const proverTomlContent = proofDetailResponse.data.proof_input['Prover.toml'];
     const verifierTomlContent = proofDetailResponse.data.public['Verifier.toml'];
-
-    console.log(proverTomlContent);
-    console.log(verifierTomlContent);
-
     const publicOutput = verifierTomlContent;
     console.log(`Circuit proof output signal: ${publicOutput}`);
   } catch (error) {
