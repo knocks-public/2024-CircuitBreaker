@@ -1,0 +1,16 @@
+{
+  "name": "sample",
+  "version": "1.0.0",
+  "description": "",
+  "main": "verify.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Susumu Tomita <your.email@example.com> (http://yourwebsite.com/)",
+  "license": "ISC",
+  "devDependencies": {
+    "@iarna/toml": "^2.2.5",
+    "axios": "^1.7.2"
+  }
+}
