@@ -1,30 +1,3 @@
-# Inro Circuit
-
-## Quick Use
-
-This is a circuit for age verification.
-It is used as the backend for the Inro age verification app, which utilizes zero-knowledge proofs. This project uses Noir and Sindri.
-For more details, please refer to the [README](../../README.md).
-
-## Author(s)
-
-- [Shingo Takagi](https://www.linkedin.com/in/shingo-takagi-8a017224a/) - Full Stack Developer
-- [Susumu Tomita](https://susumutomita.netlify.app/) - Full Stack Developer
-
-## Steps to Generate a Proof
-
-### **Deploy the circuit to Sindri**
-
-```makefile
-make deploy
-```
-
-### **Generate a Proof**
-
-Use the following [sample program](sample/verify.js).
-You can also use the Sindri API to create a [proof](https://sindri.app/docs/reference/api/proof-create/) and verify proof using [proof detail](https://sindri.app/docs/reference/api/proof-detail/).
-
-```sample.js
 const process = require("process");
 const axios = require("axios");
 const toml = require('@iarna/toml');
@@ -103,9 +76,3 @@ async function main() {
 if (require.main === module) {
   main();
 }
-```
-
-## Dependencies
-
-- [Noir](https://noir-lang.org/)
-- [Sindri](https://sindri.app/)

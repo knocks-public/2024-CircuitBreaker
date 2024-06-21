@@ -1,5 +1,9 @@
+.PHONY: init
+init:
+	npx sindri init
+
 .PHONY: login
-deploy:
+login:
 	npx sindri login
 
 .PHONY: deploy
