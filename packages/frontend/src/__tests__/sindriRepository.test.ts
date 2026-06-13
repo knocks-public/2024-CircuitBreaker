@@ -1,5 +1,5 @@
 import axios from 'axios';
-import Config from 'react-native-config';
+import { SINDRI_API_BASE_URL, env } from '../config/env';
 import SindriRepository from '../repository/SindriRepository';
 
 jest.mock('axios');
@@ -9,6 +9,7 @@ describe('SindriRepository', () => {
   let repo: SindriRepository;
 
   beforeEach(() => {
+    jest.clearAllMocks();
     repo = new SindriRepository();
   });
 
@@ -17,11 +18,11 @@ describe('SindriRepository', () => {
     await repo.getRequest(endpoint);
 
     expect(mockedAxios.get).toHaveBeenCalledWith(
-      `${Config.SINDRI_API_URL || 'https://sindri.app/api/'}v1${endpoint}`,
+      `${SINDRI_API_BASE_URL}${endpoint}`,
       {
         headers: {
           Accept: 'application/json',
-          Authorization: `Bearer ${Config.SINDRI_API_KEY || ''}`,
+          Authorization: `Bearer ${env.sindriApiKey}`,
         },
       }
     );
@@ -33,50 +34,14 @@ describe('SindriRepository', () => {
     await repo.postRequest(endpoint, data);
 
     expect(mockedAxios.post).toHaveBeenCalledWith(
-      `${Config.SINDRI_API_URL || 'https://sindri.app/api/'}v1${endpoint}`,
+      `${SINDRI_API_BASE_URL}${endpoint}`,
       data,
       {
         headers: {
           Accept: 'application/json',
-          Authorization: `Bearer ${Config.SINDRI_API_KEY || ''}`,
+          Authorization: `Bearer ${env.sindriApiKey}`,
         },
       }
     );
-  });
-});
-
-describe('SindriRepository - pollForStatus', () => {
-  let repo: SindriRepository;
-  const endpoint = '/status';
-  const initialResponse = { data: { status: 'Processing' } };
-  const finalResponse = { data: { status: 'Ready' } };
-
-  beforeEach(() => {
-    repo = new SindriRepository();
-    jest.clearAllMocks();
-  });
-
-  it('should poll endpoint until status is "Ready"', async () => {
-    mockedAxios.get
-      .mockResolvedValueOnce(initialResponse)
-      .mockResolvedValueOnce(initialResponse)
-      .mockResolvedValueOnce(finalResponse);
-
-    const result = await repo.pollForStatus(endpoint, 3);
-    expect(result).toEqual(finalResponse);
-    expect(mockedAxios.get).toHaveBeenCalledTimes(3);
-    expect(mockedAxios.get).toHaveBeenCalledWith(
-      expect.stringContaining(endpoint),
-      expect.objectContaining({ headers: expect.any(Object) })
-    );
-  });
-
-  it('should throw an error if polling times out', async () => {
-    mockedAxios.get.mockResolvedValue(initialResponse);
-
-    await expect(repo.pollForStatus(endpoint, 2)).rejects.toThrow(
-      'Polling timed out after 2 seconds.'
-    );
-    expect(mockedAxios.get).toHaveBeenCalledTimes(2);
   });
 });

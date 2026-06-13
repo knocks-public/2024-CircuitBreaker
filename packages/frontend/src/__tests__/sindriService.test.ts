@@ -1,133 +1,144 @@
+import { AxiosResponse } from 'axios';
+import { env } from '../config/env';
 import SindriRepository from '../repository/SindriRepository';
 import SindriService from '../service/SindriService';
 
+const axiosResponse = <T>(data: T): AxiosResponse<T> =>
+  ({
+    data,
+    status: 200,
+    statusText: 'OK',
+    headers: {},
+    config: {},
+  }) as AxiosResponse<T>;
+
 describe('SindriService', () => {
+  let repository: SindriRepository;
   let service: SindriService;
 
   beforeEach(() => {
     jest.clearAllMocks();
-    service = new SindriService();
-
-    jest
-      .spyOn(SindriRepository.prototype, 'postRequest')
-      .mockImplementation((endpoint) => {
-        if (endpoint.includes('/prove')) {
-          return Promise.resolve({
-            data: { proof_id: '12345', perform_verify: 'true' },
-          });
-        }
-        return Promise.reject(new Error('Endpoint not mocked'));
-      });
-
-    jest
-      .spyOn(SindriRepository.prototype, 'getRequest')
-      .mockImplementation((endpoint) => {
-        if (endpoint.includes('/detail')) {
-          return Promise.resolve({
-            data: {
-              status: 'Ready',
-              proof: {
-                proof: 'fetched-proof-string',
-              },
-              public: {
-                'Verifier.toml': 'return = true\n',
-              },
-            },
-          });
-        }
-        return Promise.reject(new Error('Endpoint not mocked'));
-      });
-
-    jest
-      .spyOn(SindriRepository.prototype, 'pollForStatus')
-      .mockImplementation((endpoint) => {
-        if (endpoint.includes('/detail')) {
-          return Promise.resolve({
-            data: {
-              status: 'Ready',
-              proof: {
-                proof: 'fetched-proof-string',
-              },
-              public: {
-                'Verifier.toml': 'return = false\n',
-              },
-            },
-          });
-        }
-        return Promise.reject(new Error('Endpoint not mocked'));
-      });
+    repository = new SindriRepository();
+    service = new SindriService(repository);
   });
 
-  it('should generate proof successfully', async () => {
-    const input = 20;
-    await service.generateProof(input);
-    expect(SindriRepository.prototype.postRequest).toHaveBeenCalledWith(
-      `/circuit/6ea50e49-065a-4dc6-b7e6-b0e1ba3665f1/prove`,
-      { proof_input: `input = ${input}`, perform_verify: 'true' }
-    );
+  describe('generateProof', () => {
+    it('requests a proof for the given age and returns the proof id', async () => {
+      const post = jest
+        .spyOn(repository, 'postRequest')
+        .mockResolvedValue(axiosResponse({ proof_id: '12345' }));
+
+      const proofId = await service.generateProof(20);
+
+      expect(proofId).toBe('12345');
+      expect(post).toHaveBeenCalledWith(`/circuit/${env.circuitId}/prove`, {
+        proof_input: 'input = 20',
+        perform_verify: 'true',
+      });
+    });
+
+    it('throws when the API does not return a proof id', async () => {
+      jest
+        .spyOn(repository, 'postRequest')
+        .mockResolvedValue(axiosResponse({}));
+
+      await expect(service.generateProof(20)).rejects.toThrow(
+        'Failed to generate proof'
+      );
+    });
+
+    it('throws when the request fails', async () => {
+      jest
+        .spyOn(repository, 'postRequest')
+        .mockRejectedValue(new Error('network down'));
+
+      await expect(service.generateProof(20)).rejects.toThrow(
+        'Failed to generate proof'
+      );
+    });
   });
 
-  it('should handle polling for status correctly', async () => {
-    const endpoint = '/proof/12345/detail';
-    const response = await service.pollForStatus(endpoint, 10);
-    expect(response.data.status).toBe('Ready');
+  describe('pollForStatus', () => {
+    it('polls until a terminal status is reached', async () => {
+      const get = jest
+        .spyOn(repository, 'getRequest')
+        .mockResolvedValueOnce(axiosResponse({ status: 'In Progress' }))
+        .mockResolvedValueOnce(axiosResponse({ status: 'Ready' }));
+
+      const response = await service.pollForStatus('/proof/1/detail', 5);
+
+      expect(response.data.status).toBe('Ready');
+      expect(get).toHaveBeenCalledTimes(2);
+    });
+
+    it('throws when polling times out', async () => {
+      jest
+        .spyOn(repository, 'getRequest')
+        .mockResolvedValue(axiosResponse({ status: 'In Progress' }));
+
+      await expect(service.pollForStatus('/proof/1/detail', 2)).rejects.toThrow(
+        'Polling timed out after 2 seconds.'
+      );
+    });
   });
 
-  it('returns true for a successful verification', async () => {
-    const proofId = '12345';
-    jest
-      .spyOn(SindriRepository.prototype, 'pollForStatus')
-      .mockResolvedValueOnce({
-        data: {
+  describe('fetchProofDetail', () => {
+    it('returns true when the proof is valid and meets the age requirement', async () => {
+      jest.spyOn(repository, 'getRequest').mockResolvedValue(
+        axiosResponse({
           status: 'Ready',
-          public: { 'Verifier.toml': 'return = true\n' },
           perform_verify: true,
-        },
-      });
+          public: { 'Verifier.toml': 'return = true\n' },
+        })
+      );
 
-    const isVerified = await service.fetchProofDetail(proofId);
-    expect(isVerified).toBe(true);
+      await expect(service.fetchProofDetail('12345')).resolves.toBe(true);
+    });
+
+    it('returns false when the age requirement is not met', async () => {
+      jest.spyOn(repository, 'getRequest').mockResolvedValue(
+        axiosResponse({
+          status: 'Ready',
+          perform_verify: true,
+          public: { 'Verifier.toml': 'return = false\n' },
+        })
+      );
+
+      await expect(service.fetchProofDetail('12345')).resolves.toBe(false);
+    });
+
+    it('returns false when the verification output is missing', async () => {
+      jest
+        .spyOn(repository, 'getRequest')
+        .mockResolvedValue(
+          axiosResponse({ status: 'Ready', perform_verify: true, public: {} })
+        );
+
+      await expect(service.fetchProofDetail('12345')).resolves.toBe(false);
+    });
+
+    it('throws when proving failed', async () => {
+      jest
+        .spyOn(repository, 'getRequest')
+        .mockResolvedValue(axiosResponse({ status: 'Failed' }));
+
+      await expect(service.fetchProofDetail('12345')).rejects.toThrow(
+        'Proving failed'
+      );
+    });
   });
 
-  it('returns false for a failed verification', async () => {
-    const proofId = '67890';
-    const isVerified = await service.fetchProofDetail(proofId);
-    expect(isVerified).toBe(false);
-  });
+  describe('verifyProof', () => {
+    it('returns the verification result', async () => {
+      jest.spyOn(service, 'fetchProofDetail').mockResolvedValue(true);
+      await expect(service.verifyProof('12345')).resolves.toBe(true);
+    });
 
-  it('throws an error if proof fetching fails', async () => {
-    const proofId = 'failed-proof-id';
-    jest
-      .spyOn(SindriRepository.prototype, 'pollForStatus')
-      .mockRejectedValueOnce(new Error('Proving failed'));
-
-    await expect(service.fetchProofDetail(proofId)).rejects.toThrow(
-      'Proving failed'
-    );
-  });
-
-  it('should verify proof successfully when verification result is true', async () => {
-    const proofId = '12345';
-    jest.spyOn(service, 'fetchProofDetail').mockResolvedValue(true);
-    const result = await service.verifyProof(proofId);
-    expect(service.fetchProofDetail).toHaveBeenCalledWith(proofId);
-    expect(result).toBe(true);
-  });
-
-  it('should not verify proof successfully when verification result is false', async () => {
-    const proofId = '67890';
-    jest.spyOn(service, 'fetchProofDetail').mockResolvedValue(false);
-    const result = await service.verifyProof(proofId);
-    expect(service.fetchProofDetail).toHaveBeenCalledWith(proofId);
-    expect(result).toBe(false);
-  });
-
-  it('should return false when proof fetching fails', async () => {
-    const proofId = 'failed-proof-id';
-    jest
-      .spyOn(service, 'fetchProofDetail')
-      .mockRejectedValue(new Error('Proving failed'));
-    const result = await service.verifyProof(proofId);
-    expect(result).toBe(false);
+    it('returns false when verification throws', async () => {
+      jest
+        .spyOn(service, 'fetchProofDetail')
+        .mockRejectedValue(new Error('Proving failed'));
+      await expect(service.verifyProof('12345')).resolves.toBe(false);
+    });
   });
 });

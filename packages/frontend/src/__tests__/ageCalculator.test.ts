@@ -1,6 +1,10 @@
 import { calculateAge } from '../utils/ageCalculator';
 
 describe('calculateAge', () => {
+  it('returns NaN for an unparseable date string', () => {
+    expect(Number.isNaN(calculateAge('not-a-date'))).toBe(true);
+  });
+
   it('should correctly calculate age from "YYYYMMDD" string', () => {
     const birthDateString = '19900101';
     const expectedAge = new Date().getFullYear() - 1990;

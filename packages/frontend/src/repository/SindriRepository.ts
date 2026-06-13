@@ -1,42 +1,28 @@
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
+import { env, SINDRI_API_BASE_URL } from '../config/env';
 
+/**
+ * Thin HTTP layer over the Sindri REST API. It only knows how to issue
+ * authenticated requests; orchestration such as polling for a terminal status
+ * lives in {@link SindriService}.
+ */
 class SindriRepository {
-  private API_KEY: string = process.env.EXPO_PUBLIC_SINDRI_API_KEY || '';
-  private API_URL: string = `${process.env.EXPO_PUBLIC_SINDRI_API_URL || 'https://sindri.app/api/'}v1`;
-  private headersJson = {
+  private readonly baseUrl: string = SINDRI_API_BASE_URL;
+  private readonly headers = {
     Accept: 'application/json',
-    Authorization: `Bearer ${this.API_KEY}`,
+    Authorization: `Bearer ${env.sindriApiKey}`,
   };
 
-  async getRequest(endpoint: string) {
-    return axios.get(`${this.API_URL}${endpoint}`, {
-      headers: this.headersJson,
+  async getRequest(endpoint: string): Promise<AxiosResponse> {
+    return axios.get(`${this.baseUrl}${endpoint}`, {
+      headers: this.headers,
     });
   }
 
-  async postRequest(endpoint: string, data: any) {
-    return axios.post(`${this.API_URL}${endpoint}`, data, {
-      headers: this.headersJson,
+  async postRequest(endpoint: string, data: unknown): Promise<AxiosResponse> {
+    return axios.post(`${this.baseUrl}${endpoint}`, data, {
+      headers: this.headers,
     });
-  }
-
-  async pollForStatus(endpoint, timeout = 20 * 60) {
-    for (let i = 0; i < timeout; i++) {
-      const response = await axios.get(`${this.API_URL}${endpoint}`, {
-        headers: this.headersJson,
-        validateStatus: (status) => status === 200,
-      });
-
-      const status = response.data.status;
-      if (['Ready', 'Failed'].includes(status)) {
-        console.log(`Poll exited after ${i} seconds with status: ${status}`);
-        return response;
-      }
-
-      await new Promise((r) => setTimeout(r, 1000));
-    }
-
-    throw new Error(`Polling timed out after ${timeout} seconds.`);
   }
 }
 

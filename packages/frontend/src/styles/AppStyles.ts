@@ -128,4 +128,29 @@ export const styles = StyleSheet.create({
     shadowRadius: 3,
     elevation: 2,
   },
+  buttonDisabled: {
+    backgroundColor: '#9bbfe0',
+  },
+  statusContainer: {
+    marginTop: 20,
+    alignItems: 'center',
+  },
+  statusText: {
+    fontSize: 14,
+    color: '#555',
+    marginTop: 8,
+    textAlign: 'center',
+  },
+  errorText: {
+    fontSize: 14,
+    color: '#D32F2F',
+    marginTop: 16,
+    textAlign: 'center',
+  },
+  permissionText: {
+    fontSize: 16,
+    color: '#555',
+    textAlign: 'center',
+    paddingHorizontal: 24,
+  },
 });
