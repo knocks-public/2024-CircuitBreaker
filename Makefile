@@ -34,6 +34,10 @@ test_debug:
 test_watch:
 	npm run test:watch
 
+.PHONY: typecheck
+typecheck:
+	npm run typecheck
+
 .PHONY: lint
 lint:
 	npm run lint
@@ -51,7 +55,7 @@ format_check:
 	npm run format:check
 
 .PHONY: before_commit
-before_commit: test format lint
+before_commit: typecheck test format lint
 
 .PHONY: run_frontend
 run_frontend:

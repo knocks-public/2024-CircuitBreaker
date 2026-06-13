@@ -11,6 +11,7 @@
     "test": "cd packages/frontend && npm run test",
     "test:coverage": "cd packages/frontend && npm run test:coverage",
     "test:watch": "cd packages/frontend && npm run test:watch",
+    "typecheck": "cd packages/frontend && npm run typecheck",
     "lint": "cd packages/frontend && npm run lint",
     "lint:fix": "cd packages/frontend && npm run lint:fix",
     "lint:text": "npx textlint ./README.md",

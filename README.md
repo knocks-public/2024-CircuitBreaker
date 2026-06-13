@@ -113,6 +113,22 @@ Copy `.env_sample` to `.env` and adjust as necessary:
 - `EXPO_PUBLIC_CIRCUIT_ID`: Your circuit ID for zero-knowledge proofs.
 - `LOCAL_IP_ADDR`: Your local IP address (for Expo in Docker+docker-compose setups).
 
+## Development
+
+The following quality checks run in CI and can be run locally from the
+repository root. They mirror the steps enforced on every pull request:
+
+```bash
+make typecheck    # TypeScript type checking (tsc --noEmit)
+make lint         # ESLint
+make format_check # Prettier formatting check
+make test         # Unit tests
+make test_coverage # Unit tests with coverage report
+```
+
+`make before_commit` runs the type check, tests, formatter, and linter
+together as a pre-commit gate.
+
 ## Future Prospects
 
 `Inro` aims

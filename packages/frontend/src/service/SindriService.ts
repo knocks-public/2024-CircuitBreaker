@@ -1,27 +1,41 @@
+import { AxiosResponse } from 'axios';
+import { env } from '../config/env';
 import SindriRepository from '../repository/SindriRepository';
+import { logger } from '../utils/logger';
+
+/** Terminal states reported by the Sindri proving/verification pipeline. */
+const TERMINAL_STATUSES: readonly string[] = ['Ready', 'Failed'];
+
+interface ProofDetailData {
+  status?: string;
+  perform_verify?: boolean | string;
+  public?: Record<string, string>;
+}
 
 class SindriService {
   private static readonly POLL_TIMEOUT_SECONDS = 20 * 60;
   private static readonly POLL_INTERVAL_MS = 1000;
-  private static readonly DEFAULT_CIRCUIT_ID =
-    '6ea50e49-065a-4dc6-b7e6-b0e1ba3665f1';
-  private repository: SindriRepository;
-  private circuitId: string;
+  private readonly repository: SindriRepository;
+  private readonly circuitId: string;
 
-  constructor() {
-    this.repository = new SindriRepository();
-    this.circuitId =
-      process.env.EXPO_PUBLIC_CIRCUIT_ID || SindriService.DEFAULT_CIRCUIT_ID;
+  constructor(repository: SindriRepository = new SindriRepository()) {
+    this.repository = repository;
+    this.circuitId = env.circuitId;
   }
+
+  /**
+   * Repeatedly polls `endpoint` until the response reaches a terminal status
+   * (`Ready` or `Failed`) or the timeout elapses.
+   */
   async pollForStatus(
     endpoint: string,
     timeout: number = SindriService.POLL_TIMEOUT_SECONDS
-  ) {
+  ): Promise<AxiosResponse> {
     for (let i = 0; i < timeout; i++) {
       const response = await this.repository.getRequest(endpoint);
-      const status = response.data.status;
-      if (['Ready', 'Failed'].includes(status)) {
-        console.log(`Poll exited after ${i} seconds with status: ${status}`);
+      const status = response.data?.status;
+      if (typeof status === 'string' && TERMINAL_STATUSES.includes(status)) {
+        logger.debug(`Poll exited after ${i} seconds with status: ${status}`);
         return response;
       }
       await new Promise((resolve) =>
@@ -31,12 +45,16 @@ class SindriService {
     throw new Error(`Polling timed out after ${timeout} seconds.`);
   }
 
-  async generateProof(input: number) {
+  /**
+   * Requests a proof for the given age `input` and returns the proof id.
+   * The raw input is deliberately never logged: it is the user's age, which
+   * must not leak into diagnostics.
+   */
+  async generateProof(input: number): Promise<string> {
     try {
-      console.log(`Circuit ID: ${this.circuitId}`);
-      console.log('Proving circuit...');
-      console.log('Requesting proof from Sindri API...');
-      console.log(`Input: ${input}`);
+      logger.debug(
+        `Requesting proof from Sindri API (circuit ${this.circuitId})`
+      );
       const proofInput = {
         proof_input: `input = ${input}`,
         perform_verify: 'true',
@@ -47,38 +65,51 @@ class SindriService {
         endpoint,
         proofInput
       );
-      const proofId = proveResponse.data.proof_id;
-      console.log(`Proof ID: ${proofId}`);
+      const proofId = proveResponse.data?.proof_id;
+      if (!proofId) {
+        throw new Error('Sindri API did not return a proof id');
+      }
+      logger.debug(`Proof requested: ${proofId}`);
       return proofId;
     } catch (error) {
-      console.error(
-        error instanceof Error ? error.message : 'An unknown error occurred.'
+      logger.error(
+        'Failed to generate proof:',
+        error instanceof Error ? error.message : 'unknown error'
       );
       throw new Error('Failed to generate proof');
     }
   }
 
+  /**
+   * Fetches a proof's detail, waiting for it to finish proving, and returns
+   * whether it both proved successfully and satisfies the age predicate.
+   */
   async fetchProofDetail(proofId: string): Promise<boolean> {
-    console.log('Request the proof detail from Sindri API...');
+    logger.debug('Requesting proof detail from Sindri API...');
     const endpoint = `/proof/${proofId}/detail`;
-    const proofDetailResponse = await this.repository.pollForStatus(endpoint);
-    const proofDetailStatus = proofDetailResponse.data.status;
-    if (proofDetailStatus === 'Failed') {
+    const response = await this.pollForStatus(endpoint);
+    const data: ProofDetailData = response.data ?? {};
+
+    if (data.status === 'Failed') {
       throw new Error('Proving failed');
     }
-    const ageVerificationStatus =
-      proofDetailResponse.data.public['Verifier.toml'];
-    console.log(`Verification Result: ${ageVerificationStatus}`);
-    const isProofValid = proofDetailResponse.data.perform_verify;
-    console.log(`Is Verified: ${isProofValid}`);
-    return ageVerificationStatus.includes('true') && isProofValid;
+
+    const ageVerificationStatus = data.public?.['Verifier.toml'];
+    if (typeof ageVerificationStatus !== 'string') {
+      logger.warn('Proof detail is missing the verification output');
+      return false;
+    }
+
+    const meetsAgeRequirement = ageVerificationStatus.includes('true');
+    const proofWasVerified = Boolean(data.perform_verify);
+    return meetsAgeRequirement && proofWasVerified;
   }
 
   async verifyProof(proofId: string): Promise<boolean> {
     try {
       return await this.fetchProofDetail(proofId);
     } catch (error) {
-      console.error('Proof verification failed', error);
+      logger.error('Proof verification failed', error);
       return false;
     }
   }
