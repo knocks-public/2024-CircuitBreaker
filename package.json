@@ -22,20 +22,20 @@
     "start:frontend": "cd packages/frontend && npm start"
   },
   "devDependencies": {
-    "@tsconfig/react-native": "^3.0.3",
-    "@types/jest": "^29.5.12",
-    "@types/react": "^18.2.63",
-    "@types/react-test-renderer": "^18.0.7",
+    "@tsconfig/react-native": "^3.0.9",
+    "@types/jest": "^30.0.0",
+    "@types/react": "^19.2.17",
+    "@types/react-test-renderer": "^19.1.0",
     "husky": "^9.0.11",
-    "lint-staged": "^15.2.2",
+    "lint-staged": "^17.0.8",
     "prettier": "^3.3.0",
-    "rimraf": "^5.0.5",
-    "textlint": "^14.0.3",
+    "rimraf": "^6.1.3",
+    "textlint": "^15.7.1",
     "textlint-rule-no-mixed-zenkaku-and-hankaku-alphabet": "^1.0.1",
     "textlint-rule-no-mixed-zenkaku-and-hankaku-number": "^1.0.0",
-    "textlint-rule-preset-ja-spacing": "^2.2.0",
-    "textlint-rule-preset-ja-technical-writing": "^10.0.1",
+    "textlint-rule-preset-ja-spacing": "^3.0.2",
+    "textlint-rule-preset-ja-technical-writing": "^12.0.2",
     "textlint-rule-spellcheck-tech-word": "^5.0.0",
-    "typescript": "^5.3.3"
+    "typescript": "^6.0.3"
   }
 }
