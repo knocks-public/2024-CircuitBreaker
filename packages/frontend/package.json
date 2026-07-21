@@ -28,11 +28,11 @@
     "@noir-lang/noir_js": "^0.23.0",
     "@react-navigation/bottom-tabs": "^6.5.12",
     "@react-navigation/native": "^6.1.10",
-    "axios": "^1.6.7",
-    "expo": "~50.0.6",
+    "axios": "^1.18.0",
+    "expo": "~57.0.7",
     "expo-barcode-scanner": "~12.9.2",
     "expo-camera": "~14.0.4",
-    "expo-dev-client": "~3.3.8",
+    "expo-dev-client": "~57.0.7",
     "expo-status-bar": "~1.11.1",
     "react": "18.2.0",
     "react-native": "0.73.4",
@@ -44,7 +44,7 @@
     "react-native-util": "^1.0.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.0",
+    "@babel/core": "^7.29.6",
     "@tsconfig/react-native": "^3.0.3",
     "@types/jest": "^29.5.12",
     "@types/react": "~18.2.45",
